@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "319589565078",
+    "project_id": "crediton-holy-cross-music",
+    "storage_bucket": "crediton-holy-cross-music.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319589565078:android:72881b6c40b4c3b216b8b7",
+        "android_client_info": {
+          "package_name": "com.creditonholycross.holy_cross_music"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD1r3GcPP4pBgIkG0_D25xu1EpsBR9lxo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
