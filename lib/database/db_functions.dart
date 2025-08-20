@@ -3,6 +3,7 @@ import 'package:drift/native.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
 import 'package:holy_cross_music/models/month.dart';
+import 'package:holy_cross_music/models/service.dart';
 import 'package:intl/intl.dart';
 import 'package:holy_cross_music/database/database.dart';
 
@@ -35,8 +36,6 @@ class DbFunctions {
               ),
             ))
             .get();
-    // var datetimeStr = m.date + m.time;
-    // return datetimeStr.isBiggerOrEqualValue('$formattedDate$formattedTime');
 
     if (result.isEmpty) {
       return null;
@@ -46,20 +45,14 @@ class DbFunctions {
     return groupMusicByMonth(musicList);
   }
 
-  // Future<Service?> getNextService() async {
-  //   MusicDatabaseHelper dbHelper = MusicDatabaseHelper();
-  //   final result = await dbHelper.getNextService();
-  //   if (result.isEmpty) {
-  //     return null;
-  //   }
-  //   var musicList = result.map((e) => Music.fromDb(e)).toList();
-  //   return groupMusic(musicList).first;
-  // }
+  Future<Service?> getNextService(AppDatabase db) async {
+    List<MonthlyMusic>? monthly_music = await getServiceList(db);
+    return monthly_music!.first.services.firstOrNull;
+  }
 
-  // Future deleteAllMusic() async {
-  //   MusicDatabaseHelper dbHelper = MusicDatabaseHelper();
-  //   await dbHelper.deleteAllMusic();
-  // }
+  Future deleteAllMusic(AppDatabase db) async {
+    await (db.delete(db.musicItems)).go();
+  }
 
   // Future addCatalogue(List<Catalogue> catalogueList) async {
   //   CatalogueDatabaseHelper dbHelper = CatalogueDatabaseHelper();

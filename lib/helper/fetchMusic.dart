@@ -54,7 +54,7 @@ Future<void> updateMusicDb(AppDatabase db) async {
     if (parsedMusic.isEmpty) {
       return;
     }
-    // await DbFunctions().deleteAllMusic();
+    await DbFunctions().deleteAllMusic(db);
     await DbFunctions().addMultipleMusic(db, parsedMusic);
   } else {
     if (!kIsWeb) {

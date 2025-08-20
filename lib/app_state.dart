@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:holy_cross_music/database/database.dart';
 import 'package:holy_cross_music/models/app_user.dart';
 import 'package:holy_cross_music/models/month.dart';
+import 'package:holy_cross_music/models/service.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -16,7 +17,18 @@ class ApplicationState extends ChangeNotifier {
 
   final db = AppDatabase();
 
+  late Service currentService;
   List<MonthlyMusic>? serviceList;
+  Service? nextService;
+  Map<String, List<MonthlyEvents>>? eventList;
+  bool initMusicSpinner = true;
+
+  void setCurrentService(Service service) {
+    currentService = service;
+    notifyListeners();
+  }
+
+  // User Management
 
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;

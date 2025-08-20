@@ -4,8 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:holy_cross_music/database/db_functions.dart';
+import 'package:holy_cross_music/helper/fetchEvents.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
 import 'package:holy_cross_music/models/month.dart';
+import 'package:holy_cross_music/models/music.dart';
+import 'package:holy_cross_music/screens/events.dart';
+import 'package:holy_cross_music/screens/service_list.dart';
+import 'package:holy_cross_music/screens/service_music.dart';
 import 'package:holy_cross_music/screens/user_management.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:provider/provider.dart';
@@ -27,12 +32,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       context.read<ApplicationState>().serviceList = serviceList;
+      context.read<ApplicationState>().nextService =
+          serviceList!.first.services.firstOrNull;
+      context.read<ApplicationState>().initMusicSpinner = false;
     });
   }
 
   @override
   void initState() {
     asyncLoadData(context);
+    fetchEvents().then(
+      (data) => setState(() {
+        context.read<ApplicationState>().eventList = data;
+      }),
+    );
     super.initState();
   }
 
@@ -113,17 +126,100 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               Image.asset('images/church.jpg', fit: BoxFit.cover),
-              Column(
-                children: [
-                  const ListTile(
-                    title: Text(
-                      'Next service:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text('No upcoming services'),
-                  ),
-                ],
-              ),
+              if (!appState.initMusicSpinner)
+                Column(
+                  children: [
+                    if (appState.nextService == null)
+                      const ListTile(
+                        title: Text(
+                          'Next service:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text('No upcoming services'),
+                      ),
+                    if (appState.nextService != null)
+                      ListTile(
+                        title: const Text(
+                          'Next service:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    '${Music.parseDate(appState.nextService!.date)} - ${appState.nextService!.serviceType}',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              TextSpan(
+                                text:
+                                    ' \nRehearsal - ${Music.formatTime(appState.nextService!.rehearsalTime)}\nService - ${Music.formatTime(appState.nextService!.time)}',
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          appState.setCurrentService(appState.nextService!);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const ServiceMusicPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    if (appState.nextService != null)
+                      Card(
+                        child: ListTile(
+                          title: const Text(
+                            'View next service',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          onTap: () {
+                            appState.setCurrentService(appState.nextService!);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const ServiceMusicPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    if (appState.nextService != null)
+                      Card(
+                        child: ListTile(
+                          title: const Text(
+                            'View upcoming services',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          onTap: () async {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const ServiceListPage(),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                )
+              else
+                const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: CircularProgressIndicator(),
+                ),
               Card(
                 child: ListTile(
                   title: const Text(
@@ -131,11 +227,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   onTap: () async {
-                    Fluttertoast.showToast(msg: 'Events');
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const EventsPage()),
-                    // );
+                    // Fluttertoast.showToast(msg: 'Events');
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const EventsPage(),
+                      ),
+                    );
                   },
                 ),
               ),
