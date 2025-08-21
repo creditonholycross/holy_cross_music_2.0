@@ -8,11 +8,15 @@ import 'package:holy_cross_music/helper/fetchEvents.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
+import 'package:holy_cross_music/models/service.dart';
+import 'package:holy_cross_music/screens/auth_gate.dart';
 import 'package:holy_cross_music/screens/events.dart';
+import 'package:holy_cross_music/screens/profile.dart';
 import 'package:holy_cross_music/screens/service_list.dart';
 import 'package:holy_cross_music/screens/service_music.dart';
 import 'package:holy_cross_music/screens/user_management.dart';
 import 'package:holy_cross_music/app_state.dart';
+import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -25,28 +29,79 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
 
+  // Future<bool> checkUserStatus(BuildContext context) async {
+  //   var db = FirebaseFirestore.instance;
+  //   bool userAutherised = true;
+  //   String userLevel = 'user';
+
+  //   if (FirebaseAuth.instance.currentUser == null) {
+  //     return false;
+  //   }
+
+  //   if (context.read<ApplicationState>().userInitialised = true) {
+  //     return true;
+  //   }
+
+  //   await db
+  //       .collection('users')
+  //       .doc(FirebaseAuth.instance.currentUser!.uid)
+  //       .get()
+  //       .then((value) {
+  //         if (!value.exists) {
+  //           userAutherised = false;
+  //         } else {
+  //           final data = value.data() as Map<String, dynamic>;
+  //           if (['admin', 'superadmin'].contains(data['userLevel'])) {
+  //             userLevel = data['userLevel'];
+  //           }
+  //         }
+  //       })
+  //       .onError((e, _) {
+  //         print('Error getting user $e');
+  //       });
+
+  //   if (!userAutherised) {
+  //     // Potentially do delete user here
+  //     await FirebaseAuth.instance.signOut();
+  //   }
+
+  //   setState(() {
+  //     context.read<ApplicationState>().userLevel = userLevel;
+  //     context.read<ApplicationState>().userInitialised = true;
+  //   });
+
+  //   return userAutherised;
+  // }
+
   void asyncLoadData(BuildContext context) async {
+    // await checkUserStatus(context);
     var db = context.read<ApplicationState>().db;
     await updateMusicDb(db);
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList(db);
+    Service? nextService = serviceList!.first.services.firstOrNull;
+    String serviceColour = nextService?.colour ?? 'base';
 
     setState(() {
       context.read<ApplicationState>().serviceList = serviceList;
-      context.read<ApplicationState>().nextService =
-          serviceList!.first.services.firstOrNull;
+      context.read<ApplicationState>().nextService = nextService;
       context.read<ApplicationState>().initMusicSpinner = false;
+      context.read<ApplicationState>().serviceColour = Service.serviceColor(
+        serviceColour,
+        Brightness.dark,
+      );
+      onThemeChanged(serviceColour, context.read<ApplicationState>());
     });
   }
 
   @override
   void initState() {
+    super.initState();
     asyncLoadData(context);
     fetchEvents().then(
       (data) => setState(() {
         context.read<ApplicationState>().eventList = data;
       }),
     );
-    super.initState();
   }
 
   @override
@@ -55,9 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(['Holy Cross Music', 'Manage Users'][currentPageIndex]),
+        backgroundColor: appState.serviceColour,
+        title: Text(
+          ['Holy Cross Music', 'Manage Users'][currentPageIndex],
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
         leading: currentPageIndex != 0
             ? BackButton(
+                color: Theme.of(context).colorScheme.onPrimary,
                 onPressed: () {
                   setState(() {
                     currentPageIndex = 0;
@@ -69,27 +129,22 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(
               Icons.refresh,
-              // color: Theme.of(context).colorScheme.onPrimary,
+              color: Theme.of(context).colorScheme.onPrimary,
             ),
             onPressed: () async {
               Fluttertoast.showToast(msg: 'Updating');
             },
           ),
           IconButton(
-            icon: Icon(Icons.person),
+            icon: Icon(
+              Icons.person,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute<ProfileScreen>(
-                  builder: (context) => ProfileScreen(
-                    appBar: AppBar(title: const Text('User Profile')),
-                    actions: [
-                      SignedOutAction((context) {
-                        Navigator.of(context).pop();
-                      }),
-                    ],
-                    children: [const Divider()],
-                  ),
+                  builder: (context) => const ProfilePage(),
                 ),
               );
             },
@@ -107,15 +162,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   currentPageIndex = index;
                 });
               },
+              backgroundColor: appState.serviceColour,
               selectedIndex: currentPageIndex,
-              destinations: const <Widget>[
+              labelTextStyle: WidgetStatePropertyAll(
+                TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+              ),
+              destinations: <Widget>[
                 NavigationDestination(
                   selectedIcon: Icon(Icons.home),
-                  icon: Icon(Icons.home_outlined),
+                  icon: Icon(
+                    Icons.home_outlined,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                   label: 'Home',
                 ),
                 NavigationDestination(
-                  icon: Icon(Icons.manage_accounts),
+                  selectedIcon: Icon(Icons.manage_accounts),
+                  icon: Icon(
+                    Icons.manage_accounts,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
                   label: 'Manage Users',
                 ),
               ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -171,10 +172,52 @@ class GlobalThemeData {
     brightness: Brightness.dark,
   );
 
+  static const lightLoginColorScheme = ColorScheme(
+    primary: Color.fromARGB(255, 0, 0, 0),
+    onPrimary: Color.fromARGB(255, 255, 255, 255),
+    secondary: Color(0xFFEFF3F3),
+    onSecondary: Color.fromARGB(255, 0, 0, 0),
+    error: Colors.redAccent,
+    onError: Colors.white,
+    surface: Color(0xFFFAFBFB),
+    onSurface: Color(0xFF241E30),
+    brightness: Brightness.light,
+  );
+
+  static const darkLoginColorScheme = ColorScheme(
+    primary: Color.fromARGB(255, 255, 255, 255),
+    onPrimary: Color.fromARGB(255, 255, 255, 255),
+    secondary: Color(0xFFEFF3F3),
+    onSecondary: Color.fromARGB(255, 0, 0, 0),
+    error: Colors.redAccent,
+    onError: Colors.white,
+    surface: Color.fromARGB(255, 26, 26, 26),
+    onSurface: Color.fromARGB(255, 255, 255, 255),
+    brightness: Brightness.dark,
+  );
+
+  static ThemeData lightLoginThemeData = ThemeData(
+    colorScheme: lightLoginColorScheme,
+    useMaterial3: true,
+    fontFamily: 'CallunaSans',
+  );
+
+  static ThemeData darkLoginThemeData = ThemeData(
+    colorScheme: darkLoginColorScheme,
+    useMaterial3: true,
+    fontFamily: 'CallunaSans',
+  );
+
   static ThemeData lightThemeData = ThemeData(
     colorScheme: lightRedColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStatePropertyAll<Color>(Colors.black),
+      ),
+    ),
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
 
@@ -182,6 +225,12 @@ class GlobalThemeData {
     colorScheme: darkRedColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: ButtonStyle(
+        foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
+      ),
+    ),
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );
 
@@ -189,6 +238,7 @@ class GlobalThemeData {
     colorScheme: lightGreenColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
 
@@ -196,6 +246,7 @@ class GlobalThemeData {
     colorScheme: darkGreenColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );
 
@@ -203,6 +254,7 @@ class GlobalThemeData {
     colorScheme: lightBlackColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
 
@@ -210,6 +262,7 @@ class GlobalThemeData {
     colorScheme: darkBlackColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );
 
@@ -217,6 +270,7 @@ class GlobalThemeData {
     colorScheme: lightGoldColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
 
@@ -225,6 +279,7 @@ class GlobalThemeData {
     useMaterial3: true,
     fontFamily: 'CallunaSans',
     iconTheme: const IconThemeData(color: Colors.black),
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );
 
@@ -232,6 +287,7 @@ class GlobalThemeData {
     colorScheme: lightPurpleColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
 
@@ -239,6 +295,7 @@ class GlobalThemeData {
     colorScheme: darkPurpleColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );
 
@@ -246,6 +303,7 @@ class GlobalThemeData {
     colorScheme: lightRoseColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
 
@@ -253,6 +311,7 @@ class GlobalThemeData {
     colorScheme: darkRoseColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );
 
@@ -260,6 +319,7 @@ class GlobalThemeData {
     colorScheme: lightWhiteColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
 
@@ -268,11 +328,12 @@ class GlobalThemeData {
     useMaterial3: true,
     fontFamily: 'CallunaSans',
     iconTheme: const IconThemeData(color: Colors.black),
-    // appBarTheme: AppBarTheme(titleTextStyle: TextStyle(color: Colors.black)),
+    textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );
 
   static Map<String, ThemeData> themeLightMap = {
+    'login': lightLoginThemeData,
     'base': lightThemeData,
     'red': lightThemeData,
     'green': lightGreenThemeData,
@@ -284,6 +345,7 @@ class GlobalThemeData {
   };
 
   static Map<String, ThemeData> themeDarkMap = {
+    'login': darkLoginThemeData,
     'base': darkThemeData,
     'red': darkThemeData,
     'green': darkGreenThemeData,
@@ -295,15 +357,15 @@ class GlobalThemeData {
   };
 }
 
-// void onThemeChanged(String theme, ThemeNotifier themeNotifier) async {
-//   themeNotifier.setTheme(
-//     theme,
-//     GlobalThemeData.themeLightMap[theme] as ThemeData,
-//     GlobalThemeData.themeDarkMap[theme] as ThemeData,
-//   );
-//   var prefs = await SharedPreferences.getInstance();
-//   prefs.setString('themeName', theme);
-// }
+void onThemeChanged(String theme, ApplicationState appState) async {
+  appState.setTheme(
+    theme,
+    GlobalThemeData.themeLightMap[theme] as ThemeData,
+    GlobalThemeData.themeDarkMap[theme] as ThemeData,
+  );
+  var prefs = await SharedPreferences.getInstance();
+  prefs.setString('themeName', theme);
+}
 
 void getThemeName() async {
   var prefs = await SharedPreferences.getInstance();

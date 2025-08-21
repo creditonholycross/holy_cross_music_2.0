@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
 
 import 'home.dart';
@@ -68,34 +69,39 @@ class _AuthGateState extends State<AuthGate> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
+          onThemeChanged('login', appState);
           return SignInWidget();
         } else {
-          return FutureBuilder(
-            future: checkUserStatus(context),
-            builder: (_, data) {
-              if (data.hasData) {
-                if (!data.data!) {
-                  return SignInWidget();
-                } else {
-                  return const HomeScreen();
-                }
-              } else {
-                return Center(
-                  child: Column(
-                    spacing: 16.0,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  ),
-                );
-              }
-            },
-          );
+          onThemeChanged(appState.getThemeName(), appState);
+          return const HomeScreen();
         }
+        // return FutureBuilder(
+        //   future: checkUserStatus(context),
+        //   builder: (_, data) {
+        //     if (data.hasData) {
+        //       if (!data.data!) {
+        //         return SignInWidget();
+        //       } else {
+        //         onThemeChanged(appState.getThemeName(), appState);
+        //         return const HomeScreen();
+        //       }
+        //     } else {
+        //       return Center(
+        //         child: Column(
+        //           spacing: 16.0,
+        //           mainAxisAlignment: MainAxisAlignment.center,
+        //           children: <Widget>[
+        //             Padding(
+        //               padding: const EdgeInsets.symmetric(horizontal: 16),
+        //               child: CircularProgressIndicator(),
+        //             ),
+        //           ],
+        //         ),
+        //       );
+        //     }
+        //   },
+        // );
+        // }
       },
     );
   }

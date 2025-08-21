@@ -11,7 +11,9 @@ import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/service.dart';
 
 class ApplicationState extends ChangeNotifier {
-  ApplicationState() {
+  Color serviceColour;
+  ApplicationState(this._themeName, this._lightThemeData, this._darkThemeData)
+    : serviceColour = Service.serviceColor(_themeName, Brightness.dark) {
     init();
   }
 
@@ -26,6 +28,27 @@ class ApplicationState extends ChangeNotifier {
   void setCurrentService(Service service) {
     currentService = service;
     notifyListeners();
+  }
+
+  // Theme Management
+
+  ThemeData _lightThemeData;
+  ThemeData _darkThemeData;
+  String _themeName;
+
+  getLightTheme() => _lightThemeData;
+  getDarkTheme() => _darkThemeData;
+  getThemeName() => _themeName;
+
+  setTheme(
+    String themeName,
+    ThemeData lightThemeData,
+    ThemeData darkThemeData,
+  ) async {
+    _themeName = themeName;
+    _lightThemeData = lightThemeData;
+    _darkThemeData = darkThemeData;
+    // notifyListeners();
   }
 
   // User Management
@@ -43,6 +66,12 @@ class ApplicationState extends ChangeNotifier {
     _userLevel = value;
   }
 
+  bool _userInitialised = false;
+  bool get userInitialised => _userInitialised;
+  set userInitialised(bool value) {
+    _userInitialised = value;
+  }
+
   bool _credsInitialised = false;
   bool get credsInitialised => _credsInitialised;
   set credsInitialised(bool value) {
@@ -54,14 +83,12 @@ class ApplicationState extends ChangeNotifier {
   bool get initUserSpinner => _initUserSpinner;
   set initUserSpinner(bool value) {
     _initUserSpinner = value;
-    // notifyListeners();
   }
 
   List<AppUser> _userList = [];
   List<AppUser> get userList => _userList;
   set userList(List<AppUser> value) {
     _userList = value;
-    // notifyListeners();
   }
 
   List<String> userEmails() {
@@ -80,7 +107,7 @@ class ApplicationState extends ChangeNotifier {
 
   Future<void> checkUserStatus() async {
     var db = FirebaseFirestore.instance;
-    String userLevel = 'user';
+    String user = 'user';
 
     await db
         .collection('users')
@@ -90,24 +117,28 @@ class ApplicationState extends ChangeNotifier {
           if (value.exists) {
             final data = value.data() as Map<String, dynamic>;
             if (['admin', 'superadmin'].contains(data['userLevel'])) {
-              userLevel = data['userLevel'];
+              user = data['userLevel'];
             }
+          } else {
+            FirebaseAuth.instance.signOut();
           }
         })
         .onError((e, _) {
           print('Error getting user $e');
+          FirebaseAuth.instance.signOut();
         });
-    userLevel = userLevel;
+    userLevel = user;
     notifyListeners();
   }
 
   Future<void> init() async {
     FirebaseUIAuth.configureProviders([EmailAuthProvider()]);
 
-    FirebaseAuth.instance.userChanges().listen((user) {
+    FirebaseAuth.instance.userChanges().listen((user) async {
       if (user != null) {
         _loggedIn = true;
-        checkUserStatus();
+        await checkUserStatus();
+        userInitialised = true;
       } else {
         _loggedIn = false;
       }

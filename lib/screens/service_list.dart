@@ -35,7 +35,7 @@ class _ServiceListPageState extends State<ServiceListPage> {
 
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: appState.serviceColour,
+        backgroundColor: appState.serviceColour,
         iconTheme: IconThemeData(
           color: Theme.of(context).colorScheme.onPrimary,
         ),
