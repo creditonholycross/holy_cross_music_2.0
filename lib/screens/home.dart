@@ -1,15 +1,15 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:holy_cross_music/database/db_functions.dart';
+import 'package:holy_cross_music/helper/fetchCatalogue.dart';
 import 'package:holy_cross_music/helper/fetchEvents.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
+import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
-import 'package:holy_cross_music/screens/auth_gate.dart';
+import 'package:holy_cross_music/screens/catalogueScreen.dart';
 import 'package:holy_cross_music/screens/events.dart';
 import 'package:holy_cross_music/screens/profile.dart';
 import 'package:holy_cross_music/screens/service_list.dart';
@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void asyncLoadData(BuildContext context) async {
     var db = context.read<ApplicationState>().db;
     await updateMusicDb(db);
+
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList(db);
     Service? nextService = serviceList!.first.services.firstOrNull;
     String serviceColour = nextService?.colour ?? 'base';
@@ -45,6 +46,16 @@ class _HomeScreenState extends State<HomeScreen> {
         Brightness.dark,
       );
       onThemeChanged(serviceColour, context.read<ApplicationState>());
+    });
+
+    var catalogueCount = await DbFunctions().getCatalogueCount(db);
+    if (catalogueCount == 0) {
+      await updateCatalogueDb(db);
+    }
+
+    List<Catalogue>? catalogueList = await DbFunctions().getCatalogue(db);
+    setState(() {
+      context.read<ApplicationState>().catalogueList = catalogueList;
     });
   }
 
@@ -264,11 +275,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   onTap: () async {
-                    Fluttertoast.showToast(msg: 'Music catalogue');
-                    // Navigator.of(context).push(
-                    //   MaterialPageRoute(
-                    //       builder: (context) => const CataloguePage()),
-                    // );
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CataloguePage(),
+                      ),
+                    );
                   },
                 ),
               ),

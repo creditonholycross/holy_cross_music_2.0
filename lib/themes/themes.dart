@@ -190,11 +190,6 @@ class GlobalThemeData {
     colorScheme: lightRedColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-        foregroundColor: WidgetStatePropertyAll<Color>(Colors.black),
-      ),
-    ),
     textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.black),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.white),
   );
@@ -203,11 +198,6 @@ class GlobalThemeData {
     colorScheme: darkRedColorScheme,
     useMaterial3: true,
     fontFamily: 'CallunaSans',
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: ButtonStyle(
-        foregroundColor: WidgetStatePropertyAll<Color>(Colors.white),
-      ),
-    ),
     textSelectionTheme: TextSelectionThemeData(cursorColor: Colors.white),
     snackBarTheme: const SnackBarThemeData(actionTextColor: Colors.black),
   );

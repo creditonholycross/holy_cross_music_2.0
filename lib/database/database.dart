@@ -23,14 +23,37 @@ class MusicItems extends Table {
   TextColumn get colour => text().nullable()();
 }
 
-@DriftDatabase(tables: [MusicItems])
+class CatalogueItems extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  TextColumn get composer => text()();
+  TextColumn get title => text()();
+  TextColumn get parts => text()();
+  TextColumn get publisher => text().nullable()();
+  TextColumn get season => text().nullable()();
+  TextColumn get subCat => text().nullable()();
+  TextColumn get source => text().nullable()();
+  TextColumn get date => text().nullable()();
+}
+
+@DriftDatabase(tables: [MusicItems, CatalogueItems])
 class AppDatabase extends _$AppDatabase {
   static AppDatabase instance() => AppDatabase();
 
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 2) {
+          await m.createTable(catalogueItems);
+        }
+      },
+    );
+  }
 }
 
 LazyDatabase _openConnection() {

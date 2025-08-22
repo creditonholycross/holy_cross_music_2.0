@@ -661,15 +661,565 @@ class MusicItemsCompanion extends UpdateCompanion<MusicItem> {
   }
 }
 
+class $CatalogueItemsTable extends CatalogueItems
+    with TableInfo<$CatalogueItemsTable, CatalogueItem> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CatalogueItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _composerMeta = const VerificationMeta(
+    'composer',
+  );
+  @override
+  late final GeneratedColumn<String> composer = GeneratedColumn<String>(
+    'composer',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _partsMeta = const VerificationMeta('parts');
+  @override
+  late final GeneratedColumn<String> parts = GeneratedColumn<String>(
+    'parts',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _publisherMeta = const VerificationMeta(
+    'publisher',
+  );
+  @override
+  late final GeneratedColumn<String> publisher = GeneratedColumn<String>(
+    'publisher',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _seasonMeta = const VerificationMeta('season');
+  @override
+  late final GeneratedColumn<String> season = GeneratedColumn<String>(
+    'season',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _subCatMeta = const VerificationMeta('subCat');
+  @override
+  late final GeneratedColumn<String> subCat = GeneratedColumn<String>(
+    'sub_cat',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sourceMeta = const VerificationMeta('source');
+  @override
+  late final GeneratedColumn<String> source = GeneratedColumn<String>(
+    'source',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<String> date = GeneratedColumn<String>(
+    'date',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    composer,
+    title,
+    parts,
+    publisher,
+    season,
+    subCat,
+    source,
+    date,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'catalogue_items';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CatalogueItem> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('composer')) {
+      context.handle(
+        _composerMeta,
+        composer.isAcceptableOrUnknown(data['composer']!, _composerMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_composerMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('parts')) {
+      context.handle(
+        _partsMeta,
+        parts.isAcceptableOrUnknown(data['parts']!, _partsMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_partsMeta);
+    }
+    if (data.containsKey('publisher')) {
+      context.handle(
+        _publisherMeta,
+        publisher.isAcceptableOrUnknown(data['publisher']!, _publisherMeta),
+      );
+    }
+    if (data.containsKey('season')) {
+      context.handle(
+        _seasonMeta,
+        season.isAcceptableOrUnknown(data['season']!, _seasonMeta),
+      );
+    }
+    if (data.containsKey('sub_cat')) {
+      context.handle(
+        _subCatMeta,
+        subCat.isAcceptableOrUnknown(data['sub_cat']!, _subCatMeta),
+      );
+    }
+    if (data.containsKey('source')) {
+      context.handle(
+        _sourceMeta,
+        source.isAcceptableOrUnknown(data['source']!, _sourceMeta),
+      );
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CatalogueItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CatalogueItem(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      composer: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}composer'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      parts: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}parts'],
+      )!,
+      publisher: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}publisher'],
+      ),
+      season: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}season'],
+      ),
+      subCat: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sub_cat'],
+      ),
+      source: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source'],
+      ),
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}date'],
+      ),
+    );
+  }
+
+  @override
+  $CatalogueItemsTable createAlias(String alias) {
+    return $CatalogueItemsTable(attachedDatabase, alias);
+  }
+}
+
+class CatalogueItem extends DataClass implements Insertable<CatalogueItem> {
+  final int id;
+  final String composer;
+  final String title;
+  final String parts;
+  final String? publisher;
+  final String? season;
+  final String? subCat;
+  final String? source;
+  final String? date;
+  const CatalogueItem({
+    required this.id,
+    required this.composer,
+    required this.title,
+    required this.parts,
+    this.publisher,
+    this.season,
+    this.subCat,
+    this.source,
+    this.date,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['composer'] = Variable<String>(composer);
+    map['title'] = Variable<String>(title);
+    map['parts'] = Variable<String>(parts);
+    if (!nullToAbsent || publisher != null) {
+      map['publisher'] = Variable<String>(publisher);
+    }
+    if (!nullToAbsent || season != null) {
+      map['season'] = Variable<String>(season);
+    }
+    if (!nullToAbsent || subCat != null) {
+      map['sub_cat'] = Variable<String>(subCat);
+    }
+    if (!nullToAbsent || source != null) {
+      map['source'] = Variable<String>(source);
+    }
+    if (!nullToAbsent || date != null) {
+      map['date'] = Variable<String>(date);
+    }
+    return map;
+  }
+
+  CatalogueItemsCompanion toCompanion(bool nullToAbsent) {
+    return CatalogueItemsCompanion(
+      id: Value(id),
+      composer: Value(composer),
+      title: Value(title),
+      parts: Value(parts),
+      publisher: publisher == null && nullToAbsent
+          ? const Value.absent()
+          : Value(publisher),
+      season: season == null && nullToAbsent
+          ? const Value.absent()
+          : Value(season),
+      subCat: subCat == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subCat),
+      source: source == null && nullToAbsent
+          ? const Value.absent()
+          : Value(source),
+      date: date == null && nullToAbsent ? const Value.absent() : Value(date),
+    );
+  }
+
+  factory CatalogueItem.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CatalogueItem(
+      id: serializer.fromJson<int>(json['id']),
+      composer: serializer.fromJson<String>(json['composer']),
+      title: serializer.fromJson<String>(json['title']),
+      parts: serializer.fromJson<String>(json['parts']),
+      publisher: serializer.fromJson<String?>(json['publisher']),
+      season: serializer.fromJson<String?>(json['season']),
+      subCat: serializer.fromJson<String?>(json['subCat']),
+      source: serializer.fromJson<String?>(json['source']),
+      date: serializer.fromJson<String?>(json['date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'composer': serializer.toJson<String>(composer),
+      'title': serializer.toJson<String>(title),
+      'parts': serializer.toJson<String>(parts),
+      'publisher': serializer.toJson<String?>(publisher),
+      'season': serializer.toJson<String?>(season),
+      'subCat': serializer.toJson<String?>(subCat),
+      'source': serializer.toJson<String?>(source),
+      'date': serializer.toJson<String?>(date),
+    };
+  }
+
+  CatalogueItem copyWith({
+    int? id,
+    String? composer,
+    String? title,
+    String? parts,
+    Value<String?> publisher = const Value.absent(),
+    Value<String?> season = const Value.absent(),
+    Value<String?> subCat = const Value.absent(),
+    Value<String?> source = const Value.absent(),
+    Value<String?> date = const Value.absent(),
+  }) => CatalogueItem(
+    id: id ?? this.id,
+    composer: composer ?? this.composer,
+    title: title ?? this.title,
+    parts: parts ?? this.parts,
+    publisher: publisher.present ? publisher.value : this.publisher,
+    season: season.present ? season.value : this.season,
+    subCat: subCat.present ? subCat.value : this.subCat,
+    source: source.present ? source.value : this.source,
+    date: date.present ? date.value : this.date,
+  );
+  CatalogueItem copyWithCompanion(CatalogueItemsCompanion data) {
+    return CatalogueItem(
+      id: data.id.present ? data.id.value : this.id,
+      composer: data.composer.present ? data.composer.value : this.composer,
+      title: data.title.present ? data.title.value : this.title,
+      parts: data.parts.present ? data.parts.value : this.parts,
+      publisher: data.publisher.present ? data.publisher.value : this.publisher,
+      season: data.season.present ? data.season.value : this.season,
+      subCat: data.subCat.present ? data.subCat.value : this.subCat,
+      source: data.source.present ? data.source.value : this.source,
+      date: data.date.present ? data.date.value : this.date,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CatalogueItem(')
+          ..write('id: $id, ')
+          ..write('composer: $composer, ')
+          ..write('title: $title, ')
+          ..write('parts: $parts, ')
+          ..write('publisher: $publisher, ')
+          ..write('season: $season, ')
+          ..write('subCat: $subCat, ')
+          ..write('source: $source, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    composer,
+    title,
+    parts,
+    publisher,
+    season,
+    subCat,
+    source,
+    date,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CatalogueItem &&
+          other.id == this.id &&
+          other.composer == this.composer &&
+          other.title == this.title &&
+          other.parts == this.parts &&
+          other.publisher == this.publisher &&
+          other.season == this.season &&
+          other.subCat == this.subCat &&
+          other.source == this.source &&
+          other.date == this.date);
+}
+
+class CatalogueItemsCompanion extends UpdateCompanion<CatalogueItem> {
+  final Value<int> id;
+  final Value<String> composer;
+  final Value<String> title;
+  final Value<String> parts;
+  final Value<String?> publisher;
+  final Value<String?> season;
+  final Value<String?> subCat;
+  final Value<String?> source;
+  final Value<String?> date;
+  const CatalogueItemsCompanion({
+    this.id = const Value.absent(),
+    this.composer = const Value.absent(),
+    this.title = const Value.absent(),
+    this.parts = const Value.absent(),
+    this.publisher = const Value.absent(),
+    this.season = const Value.absent(),
+    this.subCat = const Value.absent(),
+    this.source = const Value.absent(),
+    this.date = const Value.absent(),
+  });
+  CatalogueItemsCompanion.insert({
+    this.id = const Value.absent(),
+    required String composer,
+    required String title,
+    required String parts,
+    this.publisher = const Value.absent(),
+    this.season = const Value.absent(),
+    this.subCat = const Value.absent(),
+    this.source = const Value.absent(),
+    this.date = const Value.absent(),
+  }) : composer = Value(composer),
+       title = Value(title),
+       parts = Value(parts);
+  static Insertable<CatalogueItem> custom({
+    Expression<int>? id,
+    Expression<String>? composer,
+    Expression<String>? title,
+    Expression<String>? parts,
+    Expression<String>? publisher,
+    Expression<String>? season,
+    Expression<String>? subCat,
+    Expression<String>? source,
+    Expression<String>? date,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (composer != null) 'composer': composer,
+      if (title != null) 'title': title,
+      if (parts != null) 'parts': parts,
+      if (publisher != null) 'publisher': publisher,
+      if (season != null) 'season': season,
+      if (subCat != null) 'sub_cat': subCat,
+      if (source != null) 'source': source,
+      if (date != null) 'date': date,
+    });
+  }
+
+  CatalogueItemsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? composer,
+    Value<String>? title,
+    Value<String>? parts,
+    Value<String?>? publisher,
+    Value<String?>? season,
+    Value<String?>? subCat,
+    Value<String?>? source,
+    Value<String?>? date,
+  }) {
+    return CatalogueItemsCompanion(
+      id: id ?? this.id,
+      composer: composer ?? this.composer,
+      title: title ?? this.title,
+      parts: parts ?? this.parts,
+      publisher: publisher ?? this.publisher,
+      season: season ?? this.season,
+      subCat: subCat ?? this.subCat,
+      source: source ?? this.source,
+      date: date ?? this.date,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (composer.present) {
+      map['composer'] = Variable<String>(composer.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (parts.present) {
+      map['parts'] = Variable<String>(parts.value);
+    }
+    if (publisher.present) {
+      map['publisher'] = Variable<String>(publisher.value);
+    }
+    if (season.present) {
+      map['season'] = Variable<String>(season.value);
+    }
+    if (subCat.present) {
+      map['sub_cat'] = Variable<String>(subCat.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<String>(date.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CatalogueItemsCompanion(')
+          ..write('id: $id, ')
+          ..write('composer: $composer, ')
+          ..write('title: $title, ')
+          ..write('parts: $parts, ')
+          ..write('publisher: $publisher, ')
+          ..write('season: $season, ')
+          ..write('subCat: $subCat, ')
+          ..write('source: $source, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
   late final $MusicItemsTable musicItems = $MusicItemsTable(this);
+  late final $CatalogueItemsTable catalogueItems = $CatalogueItemsTable(this);
+  late final Index datetime = Index(
+    'datetime',
+    'CREATE INDEX datetime ON music_items (date, time)',
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [musicItems];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    musicItems,
+    catalogueItems,
+    datetime,
+  ];
 }
 
 typedef $$MusicItemsTableCreateCompanionBuilder =
@@ -983,10 +1533,284 @@ typedef $$MusicItemsTableProcessedTableManager =
       MusicItem,
       PrefetchHooks Function()
     >;
+typedef $$CatalogueItemsTableCreateCompanionBuilder =
+    CatalogueItemsCompanion Function({
+      Value<int> id,
+      required String composer,
+      required String title,
+      required String parts,
+      Value<String?> publisher,
+      Value<String?> season,
+      Value<String?> subCat,
+      Value<String?> source,
+      Value<String?> date,
+    });
+typedef $$CatalogueItemsTableUpdateCompanionBuilder =
+    CatalogueItemsCompanion Function({
+      Value<int> id,
+      Value<String> composer,
+      Value<String> title,
+      Value<String> parts,
+      Value<String?> publisher,
+      Value<String?> season,
+      Value<String?> subCat,
+      Value<String?> source,
+      Value<String?> date,
+    });
+
+class $$CatalogueItemsTableFilterComposer
+    extends Composer<_$AppDatabase, $CatalogueItemsTable> {
+  $$CatalogueItemsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get composer => $composableBuilder(
+    column: $table.composer,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get parts => $composableBuilder(
+    column: $table.parts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get publisher => $composableBuilder(
+    column: $table.publisher,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get season => $composableBuilder(
+    column: $table.season,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subCat => $composableBuilder(
+    column: $table.subCat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CatalogueItemsTableOrderingComposer
+    extends Composer<_$AppDatabase, $CatalogueItemsTable> {
+  $$CatalogueItemsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get composer => $composableBuilder(
+    column: $table.composer,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get parts => $composableBuilder(
+    column: $table.parts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get publisher => $composableBuilder(
+    column: $table.publisher,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get season => $composableBuilder(
+    column: $table.season,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subCat => $composableBuilder(
+    column: $table.subCat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get source => $composableBuilder(
+    column: $table.source,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CatalogueItemsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CatalogueItemsTable> {
+  $$CatalogueItemsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get composer =>
+      $composableBuilder(column: $table.composer, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get parts =>
+      $composableBuilder(column: $table.parts, builder: (column) => column);
+
+  GeneratedColumn<String> get publisher =>
+      $composableBuilder(column: $table.publisher, builder: (column) => column);
+
+  GeneratedColumn<String> get season =>
+      $composableBuilder(column: $table.season, builder: (column) => column);
+
+  GeneratedColumn<String> get subCat =>
+      $composableBuilder(column: $table.subCat, builder: (column) => column);
+
+  GeneratedColumn<String> get source =>
+      $composableBuilder(column: $table.source, builder: (column) => column);
+
+  GeneratedColumn<String> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+}
+
+class $$CatalogueItemsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CatalogueItemsTable,
+          CatalogueItem,
+          $$CatalogueItemsTableFilterComposer,
+          $$CatalogueItemsTableOrderingComposer,
+          $$CatalogueItemsTableAnnotationComposer,
+          $$CatalogueItemsTableCreateCompanionBuilder,
+          $$CatalogueItemsTableUpdateCompanionBuilder,
+          (
+            CatalogueItem,
+            BaseReferences<_$AppDatabase, $CatalogueItemsTable, CatalogueItem>,
+          ),
+          CatalogueItem,
+          PrefetchHooks Function()
+        > {
+  $$CatalogueItemsTableTableManager(
+    _$AppDatabase db,
+    $CatalogueItemsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CatalogueItemsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CatalogueItemsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CatalogueItemsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> composer = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> parts = const Value.absent(),
+                Value<String?> publisher = const Value.absent(),
+                Value<String?> season = const Value.absent(),
+                Value<String?> subCat = const Value.absent(),
+                Value<String?> source = const Value.absent(),
+                Value<String?> date = const Value.absent(),
+              }) => CatalogueItemsCompanion(
+                id: id,
+                composer: composer,
+                title: title,
+                parts: parts,
+                publisher: publisher,
+                season: season,
+                subCat: subCat,
+                source: source,
+                date: date,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String composer,
+                required String title,
+                required String parts,
+                Value<String?> publisher = const Value.absent(),
+                Value<String?> season = const Value.absent(),
+                Value<String?> subCat = const Value.absent(),
+                Value<String?> source = const Value.absent(),
+                Value<String?> date = const Value.absent(),
+              }) => CatalogueItemsCompanion.insert(
+                id: id,
+                composer: composer,
+                title: title,
+                parts: parts,
+                publisher: publisher,
+                season: season,
+                subCat: subCat,
+                source: source,
+                date: date,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CatalogueItemsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CatalogueItemsTable,
+      CatalogueItem,
+      $$CatalogueItemsTableFilterComposer,
+      $$CatalogueItemsTableOrderingComposer,
+      $$CatalogueItemsTableAnnotationComposer,
+      $$CatalogueItemsTableCreateCompanionBuilder,
+      $$CatalogueItemsTableUpdateCompanionBuilder,
+      (
+        CatalogueItem,
+        BaseReferences<_$AppDatabase, $CatalogueItemsTable, CatalogueItem>,
+      ),
+      CatalogueItem,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
   $AppDatabaseManager(this._db);
   $$MusicItemsTableTableManager get musicItems =>
       $$MusicItemsTableTableManager(_db, _db.musicItems);
+  $$CatalogueItemsTableTableManager get catalogueItems =>
+      $$CatalogueItemsTableTableManager(_db, _db.catalogueItems);
 }

@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:drift_flutter/drift_flutter.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
+import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/service.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,7 @@ class DbFunctions {
   }
 
   Future<void> addMultipleMusic(AppDatabase db, List<Music> musicList) async {
-    db.batch((b) {
+    await db.batch((b) {
       b.insertAll(db.musicItems, [for (var m in musicList) m.toCompanion()]);
     });
   }
@@ -54,31 +55,38 @@ class DbFunctions {
     await (db.delete(db.musicItems)).go();
   }
 
-  // Future addCatalogue(List<Catalogue> catalogueList) async {
-  //   CatalogueDatabaseHelper dbHelper = CatalogueDatabaseHelper();
-  //   for (var music in catalogueList) {
-  //     await dbHelper.insertMusic(music);
-  //   }
-  // }
+  Future addCatalogue(AppDatabase db, List<Catalogue> catalogueList) async {
+    await db.batch((b) {
+      b.insertAll(db.catalogueItems, [
+        for (var c in catalogueList) c.toCompanion(),
+      ]);
+    });
+  }
 
-  // Future<int?> getCatalogueCount() async {
-  //   CatalogueDatabaseHelper dbHelper = CatalogueDatabaseHelper();
-  //   final result = await dbHelper.getCount();
-  //   return result;
-  // }
+  Future<int?> getCatalogueCount(AppDatabase db) async {
+    final count = db.catalogueItems.id.count();
+    var result = await (db.selectOnly(
+      db.catalogueItems,
+    )..addColumns([count])).map((row) => row.read(count)).getSingle();
+    return result;
+  }
 
-  // Future<List<Catalogue>?> getCatalogue() async {
-  //   CatalogueDatabaseHelper dbHelper = CatalogueDatabaseHelper();
-  //   final result = await dbHelper.getCatalogue();
-  //   if (result.isEmpty) {
-  //     return null;
-  //   }
-  //   var catalogue = result.map((e) => Catalogue.fromDb(e)).toList();
-  //   return catalogue;
-  // }
+  Future<List<Catalogue>?> getCatalogue(AppDatabase db) async {
+    final result =
+        await (db.select(db.catalogueItems)..orderBy([
+              (c) => OrderingTerm(expression: c.composer),
+              (c) => OrderingTerm(expression: c.title),
+            ]))
+            .get();
 
-  // Future deleteCatalogue() async {
-  //   CatalogueDatabaseHelper dbHelper = CatalogueDatabaseHelper();
-  //   await dbHelper.deleteCatalogue();
-  // }
+    if (result.isEmpty) {
+      return null;
+    }
+    var catalogue = result.map((e) => Catalogue.fromDb(e)).toList();
+    return catalogue;
+  }
+
+  Future deleteCatalogue(AppDatabase db) async {
+    await (db.delete(db.catalogueItems)).go();
+  }
 }

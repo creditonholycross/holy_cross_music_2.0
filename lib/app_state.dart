@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dart_firebase_admin/Auth.dart';
 import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/database/database.dart';
+import 'package:holy_cross_music/helper/navScroll.dart';
 import 'package:holy_cross_music/models/app_user.dart';
+import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplicationState extends ChangeNotifier {
   Color serviceColour;
@@ -32,6 +32,82 @@ class ApplicationState extends ChangeNotifier {
 
   void setCurrentService(Service service) {
     currentService = service;
+    notifyListeners();
+  }
+
+  // Catalogue
+
+  List<Catalogue>? catalogueList;
+  List<Catalogue>? filteredCatalogueList;
+  String seasonMenuValue = 'season (all)';
+  String partsMenuValue = 'parts (all)';
+  int navIndex = 0;
+  Map<String, int> navScrollIndexMapping = {};
+  var alphabetList = List.generate(
+    26,
+    (index) => String.fromCharCode(index + 65),
+  );
+  bool initCatalogueSpinner = true;
+  bool catalogueRefreshDisabled = false;
+
+  Future<void> setCatalogueList(List<Catalogue>? catalogue) async {
+    catalogueList = catalogue;
+    filterCatalogueListNotify();
+    print('catalogue set');
+    notifyListeners();
+  }
+
+  Future<List<Catalogue>?> filterCatalogueList() async {
+    var filteredList = catalogueList;
+    if (seasonMenuValue.toLowerCase() != 'season (all)') {
+      final filteredSeasonCatalogue = filteredList
+          ?.where(
+            (music) =>
+                music.season!.toLowerCase() == seasonMenuValue.toLowerCase(),
+          )
+          .toList();
+      filteredList = filteredSeasonCatalogue;
+    }
+    if (partsMenuValue.toLowerCase() != 'parts (all)') {
+      final filteredPartsCatalogue = filteredList
+          ?.where(
+            (music) =>
+                music.parts.toLowerCase() == partsMenuValue.toLowerCase(),
+          )
+          .toList();
+      filteredList = filteredPartsCatalogue;
+    }
+
+    filteredCatalogueList = filteredList;
+    if (filteredList != null) {
+      setnavScrollIndexMapping(filteredList);
+    }
+    return filteredCatalogueList;
+  }
+
+  void filterCatalogueListNotify() {
+    filterCatalogueList();
+    notifyListeners();
+  }
+
+  void setNavIndex(int index) {
+    navIndex = index;
+    notifyListeners();
+  }
+
+  void setnavScrollIndexMapping(List<Catalogue> catalogueList) {
+    navScrollIndexMapping = createIndexes(catalogueList);
+    alphabetList = navScrollIndexMapping.keys.toList();
+    navIndex = 0;
+  }
+
+  void enableCatalogueRefresh() {
+    catalogueRefreshDisabled = false;
+    notifyListeners();
+  }
+
+  void disableCatalogueRefresh() {
+    catalogueRefreshDisabled = true;
     notifyListeners();
   }
 
