@@ -1,7 +1,7 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.creditonholycross.musiclist">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="holy_cross_music"
+        android:label="Holy Cross Music"
         android:name="${applicationName}"
         android:icon="@mipmap/new_launcher"
         android:roundIcon="@mipmap/new_launcher_round">

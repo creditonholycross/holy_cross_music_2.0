@@ -9,11 +9,16 @@ import 'package:holy_cross_music/database/database.dart';
 import 'package:holy_cross_music/models/app_user.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplicationState extends ChangeNotifier {
   Color serviceColour;
-  ApplicationState(this._themeName, this._lightThemeData, this._darkThemeData)
-    : serviceColour = Service.serviceColor(_themeName, Brightness.dark) {
+  ApplicationState(
+    this._profilePhotoPath,
+    this._themeName,
+    this._lightThemeData,
+    this._darkThemeData,
+  ) : serviceColour = Service.serviceColor(_themeName, Brightness.dark) {
     init();
   }
 
@@ -52,6 +57,13 @@ class ApplicationState extends ChangeNotifier {
   }
 
   // User Management
+
+  String? _profilePhotoPath;
+  String? get profilePhotoPath => _profilePhotoPath;
+  set profilePhotoPath(String? value) {
+    _profilePhotoPath = value;
+    notifyListeners();
+  }
 
   bool _loggedIn = false;
   bool get loggedIn => _loggedIn;

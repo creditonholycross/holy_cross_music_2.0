@@ -29,52 +29,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
 
-  // Future<bool> checkUserStatus(BuildContext context) async {
-  //   var db = FirebaseFirestore.instance;
-  //   bool userAutherised = true;
-  //   String userLevel = 'user';
-
-  //   if (FirebaseAuth.instance.currentUser == null) {
-  //     return false;
-  //   }
-
-  //   if (context.read<ApplicationState>().userInitialised = true) {
-  //     return true;
-  //   }
-
-  //   await db
-  //       .collection('users')
-  //       .doc(FirebaseAuth.instance.currentUser!.uid)
-  //       .get()
-  //       .then((value) {
-  //         if (!value.exists) {
-  //           userAutherised = false;
-  //         } else {
-  //           final data = value.data() as Map<String, dynamic>;
-  //           if (['admin', 'superadmin'].contains(data['userLevel'])) {
-  //             userLevel = data['userLevel'];
-  //           }
-  //         }
-  //       })
-  //       .onError((e, _) {
-  //         print('Error getting user $e');
-  //       });
-
-  //   if (!userAutherised) {
-  //     // Potentially do delete user here
-  //     await FirebaseAuth.instance.signOut();
-  //   }
-
-  //   setState(() {
-  //     context.read<ApplicationState>().userLevel = userLevel;
-  //     context.read<ApplicationState>().userInitialised = true;
-  //   });
-
-  //   return userAutherised;
-  // }
-
   void asyncLoadData(BuildContext context) async {
-    // await checkUserStatus(context);
     var db = context.read<ApplicationState>().db;
     await updateMusicDb(db);
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList(db);

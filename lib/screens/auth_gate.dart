@@ -69,10 +69,10 @@ class _AuthGateState extends State<AuthGate> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          onThemeChanged('login', appState);
+          // onThemeChanged('login', appState);
           return SignInWidget();
         } else {
-          onThemeChanged(appState.getThemeName(), appState);
+          // onThemeChanged(appState.getThemeName(), appState);
           return const HomeScreen();
         }
         // return FutureBuilder(

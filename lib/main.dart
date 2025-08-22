@@ -14,12 +14,14 @@ void main() async {
 
   SharedPreferences.getInstance().then((prefs) {
     var themeName = prefs.getString('themeName') ?? 'base';
+    var profilePhotoPath = prefs.getString('profilePhotoPath');
     runApp(
       ChangeNotifierProvider(
         create: (context) => ApplicationState(
+          profilePhotoPath,
           themeName,
-          GlobalThemeData.themeLightMap['login'] as ThemeData,
-          GlobalThemeData.themeDarkMap['login'] as ThemeData,
+          GlobalThemeData.themeLightMap[themeName] as ThemeData,
+          GlobalThemeData.themeDarkMap[themeName] as ThemeData,
         ),
         builder: ((context, child) => const MyApp()),
       ),

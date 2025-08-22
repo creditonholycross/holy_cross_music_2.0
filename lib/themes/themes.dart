@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GlobalThemeData {
   static const lightRedColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 128, 1, 34),
+    primary: Color.fromARGB(255, 0, 0, 0),
     onPrimary: Color.fromARGB(255, 255, 255, 255),
     secondary: Color(0xFFEFF3F3),
     onSecondary: Color.fromARGB(255, 0, 0, 0),
@@ -14,10 +14,11 @@ class GlobalThemeData {
     surface: Color(0xFFFAFBFB),
     onSurface: Color(0xFF241E30),
     brightness: Brightness.light,
+    tertiary: Color.fromARGB(255, 128, 1, 34),
   );
 
   static const darkRedColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 128, 1, 34),
+    primary: Color.fromARGB(255, 255, 255, 255),
     onPrimary: Color.fromARGB(255, 255, 255, 255),
     secondary: Color(0xFFEFF3F3),
     onSecondary: Color.fromARGB(255, 0, 0, 0),
@@ -26,10 +27,11 @@ class GlobalThemeData {
     surface: Color.fromARGB(255, 26, 26, 26),
     onSurface: Color.fromARGB(255, 255, 255, 255),
     brightness: Brightness.dark,
+    tertiary: Color.fromARGB(255, 128, 1, 34),
   );
 
   static const lightGreenColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 1, 128, 1),
+    primary: Color.fromARGB(255, 0, 0, 0),
     onPrimary: Color.fromARGB(255, 255, 255, 255),
     secondary: Color(0xFFEFF3F3),
     onSecondary: Color.fromARGB(255, 0, 0, 0),
@@ -38,10 +40,11 @@ class GlobalThemeData {
     surface: Color(0xFFFAFBFB),
     onSurface: Color(0xFF241E30),
     brightness: Brightness.light,
+    tertiary: Color.fromARGB(255, 1, 128, 1),
   );
 
   static const darkGreenColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 1, 128, 1),
+    primary: Color.fromARGB(255, 255, 255, 255),
     onPrimary: Color.fromARGB(255, 255, 255, 255),
     secondary: Color(0xFFEFF3F3),
     onSecondary: Color.fromARGB(255, 0, 0, 0),
@@ -50,6 +53,7 @@ class GlobalThemeData {
     surface: Color.fromARGB(255, 26, 26, 26),
     onSurface: Color.fromARGB(255, 255, 255, 255),
     brightness: Brightness.dark,
+    tertiary: Color.fromARGB(255, 1, 128, 1),
   );
 
   static const lightBlackColorScheme = ColorScheme(
@@ -62,10 +66,11 @@ class GlobalThemeData {
     surface: Color.fromARGB(255, 255, 255, 255),
     onSurface: Color.fromARGB(255, 0, 0, 0),
     brightness: Brightness.light,
+    tertiary: Color.fromARGB(255, 0, 0, 0),
   );
 
   static const darkBlackColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 0, 0, 0),
+    primary: Color.fromARGB(255, 255, 255, 255),
     onPrimary: Color.fromARGB(255, 255, 255, 255),
     secondary: Color(0xFFEFF3F3),
     onSecondary: Color.fromARGB(255, 0, 0, 0),
@@ -74,10 +79,11 @@ class GlobalThemeData {
     surface: Color.fromARGB(255, 26, 26, 26),
     onSurface: Color.fromARGB(255, 255, 255, 255),
     brightness: Brightness.dark,
+    tertiary: Color.fromARGB(255, 0, 0, 0),
   );
 
   static const lightGoldColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 228, 175, 29),
+    primary: Color.fromARGB(255, 0, 0, 0),
     onPrimary: Colors.black,
     secondary: Color(0xFFEFF3F3),
     onSecondary: Color.fromARGB(255, 0, 0, 0),
@@ -86,78 +92,85 @@ class GlobalThemeData {
     surface: Color(0xFFFAFBFB),
     onSurface: Color(0xFF241E30),
     brightness: Brightness.light,
+    tertiary: Color.fromARGB(255, 228, 175, 29),
   );
 
   static const darkGoldColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 228, 175, 2),
-    onPrimary: Colors.black,
-    secondary: Color(0xFFEFF3F3),
-    onSecondary: Color.fromARGB(255, 0, 0, 0),
-    error: Colors.redAccent,
-    onError: Colors.white,
-    surface: Color.fromARGB(255, 26, 26, 26),
-    onSurface: Color.fromARGB(255, 255, 255, 255),
-    brightness: Brightness.dark,
-  );
-
-  static const lightPurpleColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 77, 1, 128),
-    onPrimary: Color.fromARGB(255, 255, 255, 255),
-    secondary: Color(0xFFEFF3F3),
-    onSecondary: Color.fromARGB(255, 0, 0, 0),
-    error: Colors.redAccent,
-    onError: Colors.white,
-    surface: Color(0xFFFAFBFB),
-    onSurface: Color(0xFF241E30),
-    brightness: Brightness.light,
-  );
-
-  static const darkPurpleColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 77, 1, 128),
-    onPrimary: Color.fromARGB(255, 255, 255, 255),
-    secondary: Color(0xFFEFF3F3),
-    onSecondary: Color.fromARGB(255, 0, 0, 0),
-    error: Colors.redAccent,
-    onError: Colors.white,
-    surface: Color.fromARGB(255, 26, 26, 26),
-    onSurface: Color.fromARGB(255, 255, 255, 255),
-    brightness: Brightness.dark,
-  );
-
-  static const lightRoseColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 187, 118, 181),
-    onPrimary: Colors.black,
-    secondary: Color(0xFFEFF3F3),
-    onSecondary: Color.fromARGB(255, 0, 0, 0),
-    error: Colors.redAccent,
-    onError: Colors.white,
-    surface: Color(0xFFFAFBFB),
-    onSurface: Color(0xFF241E30),
-    brightness: Brightness.light,
-  );
-
-  static const darkRoseColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 187, 118, 181),
-    onPrimary: Colors.black,
-    secondary: Color(0xFFEFF3F3),
-    onSecondary: Color.fromARGB(255, 0, 0, 0),
-    error: Colors.redAccent,
-    onError: Colors.white,
-    surface: Color.fromARGB(255, 26, 26, 26),
-    onSurface: Color.fromARGB(255, 255, 255, 255),
-    brightness: Brightness.dark,
-  );
-
-  static const lightWhiteColorScheme = ColorScheme(
     primary: Color.fromARGB(255, 255, 255, 255),
     onPrimary: Colors.black,
     secondary: Color(0xFFEFF3F3),
     onSecondary: Color.fromARGB(255, 0, 0, 0),
     error: Colors.redAccent,
     onError: Colors.white,
+    surface: Color.fromARGB(255, 26, 26, 26),
+    onSurface: Color.fromARGB(255, 255, 255, 255),
+    brightness: Brightness.dark,
+    tertiary: Color.fromARGB(255, 228, 175, 29),
+  );
+
+  static const lightPurpleColorScheme = ColorScheme(
+    primary: Color.fromARGB(255, 0, 0, 0),
+    onPrimary: Color.fromARGB(255, 255, 255, 255),
+    secondary: Color(0xFFEFF3F3),
+    onSecondary: Color.fromARGB(255, 0, 0, 0),
+    error: Colors.redAccent,
+    onError: Colors.white,
     surface: Color(0xFFFAFBFB),
     onSurface: Color(0xFF241E30),
     brightness: Brightness.light,
+    tertiary: Color.fromARGB(255, 77, 1, 128),
+  );
+
+  static const darkPurpleColorScheme = ColorScheme(
+    primary: Color.fromARGB(255, 255, 255, 255),
+    onPrimary: Color.fromARGB(255, 255, 255, 255),
+    secondary: Color(0xFFEFF3F3),
+    onSecondary: Color.fromARGB(255, 0, 0, 0),
+    error: Colors.redAccent,
+    onError: Colors.white,
+    surface: Color.fromARGB(255, 26, 26, 26),
+    onSurface: Color.fromARGB(255, 255, 255, 255),
+    brightness: Brightness.dark,
+    tertiary: Color.fromARGB(255, 77, 1, 128),
+  );
+
+  static const lightRoseColorScheme = ColorScheme(
+    primary: Color.fromARGB(255, 0, 0, 0),
+    onPrimary: Colors.black,
+    secondary: Color(0xFFEFF3F3),
+    onSecondary: Color.fromARGB(255, 0, 0, 0),
+    error: Colors.redAccent,
+    onError: Colors.white,
+    surface: Color(0xFFFAFBFB),
+    onSurface: Color(0xFF241E30),
+    brightness: Brightness.light,
+    tertiary: Color.fromARGB(255, 187, 118, 181),
+  );
+
+  static const darkRoseColorScheme = ColorScheme(
+    primary: Color.fromARGB(255, 255, 255, 255),
+    onPrimary: Colors.black,
+    secondary: Color(0xFFEFF3F3),
+    onSecondary: Color.fromARGB(255, 0, 0, 0),
+    error: Colors.redAccent,
+    onError: Colors.white,
+    surface: Color.fromARGB(255, 26, 26, 26),
+    onSurface: Color.fromARGB(255, 255, 255, 255),
+    brightness: Brightness.dark,
+    tertiary: Color.fromARGB(255, 187, 118, 181),
+  );
+
+  static const lightWhiteColorScheme = ColorScheme(
+    primary: Color.fromARGB(255, 0, 0, 0),
+    onPrimary: Colors.black,
+    secondary: Color(0xFFEFF3F3),
+    onSecondary: Color.fromARGB(255, 0, 0, 0),
+    error: Colors.redAccent,
+    onError: Colors.white,
+    surface: Color(0xFFFAFBFB),
+    onSurface: Color(0xFF241E30),
+    brightness: Brightness.light,
+    tertiary: Color.fromARGB(255, 255, 255, 255),
   );
 
   static const darkWhiteColorScheme = ColorScheme(
@@ -170,42 +183,7 @@ class GlobalThemeData {
     surface: Color.fromARGB(255, 26, 26, 26),
     onSurface: Color.fromARGB(255, 255, 255, 255),
     brightness: Brightness.dark,
-  );
-
-  static const lightLoginColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 0, 0, 0),
-    onPrimary: Color.fromARGB(255, 255, 255, 255),
-    secondary: Color(0xFFEFF3F3),
-    onSecondary: Color.fromARGB(255, 0, 0, 0),
-    error: Colors.redAccent,
-    onError: Colors.white,
-    surface: Color(0xFFFAFBFB),
-    onSurface: Color(0xFF241E30),
-    brightness: Brightness.light,
-  );
-
-  static const darkLoginColorScheme = ColorScheme(
-    primary: Color.fromARGB(255, 255, 255, 255),
-    onPrimary: Color.fromARGB(255, 255, 255, 255),
-    secondary: Color(0xFFEFF3F3),
-    onSecondary: Color.fromARGB(255, 0, 0, 0),
-    error: Colors.redAccent,
-    onError: Colors.white,
-    surface: Color.fromARGB(255, 26, 26, 26),
-    onSurface: Color.fromARGB(255, 255, 255, 255),
-    brightness: Brightness.dark,
-  );
-
-  static ThemeData lightLoginThemeData = ThemeData(
-    colorScheme: lightLoginColorScheme,
-    useMaterial3: true,
-    fontFamily: 'CallunaSans',
-  );
-
-  static ThemeData darkLoginThemeData = ThemeData(
-    colorScheme: darkLoginColorScheme,
-    useMaterial3: true,
-    fontFamily: 'CallunaSans',
+    tertiary: Color.fromARGB(255, 255, 255, 255),
   );
 
   static ThemeData lightThemeData = ThemeData(
@@ -333,7 +311,6 @@ class GlobalThemeData {
   );
 
   static Map<String, ThemeData> themeLightMap = {
-    'login': lightLoginThemeData,
     'base': lightThemeData,
     'red': lightThemeData,
     'green': lightGreenThemeData,
@@ -345,7 +322,6 @@ class GlobalThemeData {
   };
 
   static Map<String, ThemeData> themeDarkMap = {
-    'login': darkLoginThemeData,
     'base': darkThemeData,
     'red': darkThemeData,
     'green': darkGreenThemeData,

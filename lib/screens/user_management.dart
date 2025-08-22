@@ -91,7 +91,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
     final newUserInfo = <String, String>{
       'email': userEmail,
-      'user_level': 'user',
+      'userLevel': 'user',
     };
 
     var db = FirebaseFirestore.instance;

@@ -14,7 +14,7 @@ class EventsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.tertiary,
         iconTheme: IconThemeData(
           color: Theme.of(context).colorScheme.onPrimary,
         ),
