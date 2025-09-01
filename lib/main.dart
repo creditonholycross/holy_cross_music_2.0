@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,6 +13,10 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) {
+    // Initialize FFI
+    databaseFactory = databaseFactoryFfiWeb;
+  }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   SharedPreferences.getInstance().then((prefs) {

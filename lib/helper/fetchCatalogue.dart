@@ -7,16 +7,16 @@ import 'package:http/http.dart' as http;
 var catalogueLink =
     'https://docs.google.com/spreadsheets/d/1d73dFdGKOk1-bhHmff_SGQXnzcQat1y5Y8Fa69sViOY/gviz/tq?tqx=out:csv';
 
-Future<void> fetchCatalogue(AppDatabase db) async {
-  final count = await DbFunctions().getCatalogueCount(db);
+Future<void> fetchCatalogue() async {
+  final count = await DbFunctions().getCatalogueCount();
   if (count == 0) {
     print('fetching catalogue');
-    updateCatalogueDb(db);
+    updateCatalogueDb();
   }
   // return await DbFunctions().getCatalogue();
 }
 
-Future<void> updateCatalogueDb(AppDatabase db) async {
+Future<void> updateCatalogueDb() async {
   print('updating db');
   http.Response response;
   try {
@@ -30,8 +30,8 @@ Future<void> updateCatalogueDb(AppDatabase db) async {
     if (parsedCatalogue.isEmpty) {
       return;
     }
-    await DbFunctions().deleteCatalogue(db);
-    await DbFunctions().addCatalogue(db, parsedCatalogue);
+    await DbFunctions().deleteCatalogue();
+    await DbFunctions().addCatalogue(parsedCatalogue);
   } else {
     return;
   }

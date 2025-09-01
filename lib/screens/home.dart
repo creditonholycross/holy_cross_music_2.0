@@ -1,4 +1,5 @@
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:holy_cross_music/database/db_functions.dart';
@@ -30,10 +31,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
 
   void asyncLoadData(BuildContext context) async {
-    var db = context.read<ApplicationState>().db;
-    await updateMusicDb(db);
+    await updateMusicDb();
 
-    List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList(db);
+    List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList();
     Service? nextService = serviceList!.first.services.firstOrNull;
     String serviceColour = nextService?.colour ?? 'base';
 
@@ -48,12 +48,12 @@ class _HomeScreenState extends State<HomeScreen> {
       onThemeChanged(serviceColour, context.read<ApplicationState>());
     });
 
-    var catalogueCount = await DbFunctions().getCatalogueCount(db);
+    var catalogueCount = await DbFunctions().getCatalogueCount();
     if (catalogueCount == 0) {
-      await updateCatalogueDb(db);
+      await updateCatalogueDb();
     }
 
-    List<Catalogue>? catalogueList = await DbFunctions().getCatalogue(db);
+    List<Catalogue>? catalogueList = await DbFunctions().getCatalogue();
     setState(() {
       context.read<ApplicationState>().catalogueList = catalogueList;
     });
@@ -119,9 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
         automaticallyImplyLeading: false,
       ),
       bottomNavigationBar:
-          ['admin', 'superadmin'].contains(
-            appState.userLevel,
-          ) // todo: also disable for web
+          (['admin', 'superadmin'].contains(appState.userLevel) && !kIsWeb)
           ? NavigationBar(
               onDestinationSelected: (int index) {
                 setState(() {

@@ -115,15 +115,15 @@ class SignInWidget extends StatelessWidget {
     return SignInScreen(
       showAuthActionSwitch: false,
       providers: [EmailAuthProvider()],
-      // headerBuilder: (context, constraints, shrinkOffset) {
-      //   return Padding(
-      //     padding: const EdgeInsets.all(20),
-      //     child: AspectRatio(
-      //       aspectRatio: 1,
-      //       child: Image.asset('assets/crediton_boniface_community.png'),
-      //     ),
-      //   );
-      // },
+      headerBuilder: (context, constraints, shrinkOffset) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Image.asset('images/crediton_boniface_community.png'),
+          ),
+        );
+      },
       subtitleBuilder: (context, action) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -132,15 +132,15 @@ class SignInWidget extends StatelessWidget {
           ),
         );
       },
-      // sideBuilder: (context, shrinkOffset) {
-      //   return Padding(
-      //     padding: const EdgeInsets.all(20),
-      //     child: AspectRatio(
-      //       aspectRatio: 1,
-      //       child: Image.asset('assets/crediton_boniface_community.png'),
-      //     ),
-      //   );
-      // },
+      sideBuilder: (context, shrinkOffset) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Image.asset('images/crediton_boniface_community.png'),
+          ),
+        );
+      },
     );
   }
 }

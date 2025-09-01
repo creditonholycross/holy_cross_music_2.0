@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart'
     hide EmailAuthProvider, PhoneAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:holy_cross_music/database/database.dart';
 import 'package:holy_cross_music/helper/navScroll.dart';
 import 'package:holy_cross_music/models/app_user.dart';
 import 'package:holy_cross_music/models/catalogue.dart';
@@ -21,8 +20,6 @@ class ApplicationState extends ChangeNotifier {
   ) : serviceColour = Service.serviceColor(_themeName, Brightness.dark) {
     init();
   }
-
-  final db = AppDatabase();
 
   late Service currentService;
   List<MonthlyMusic>? serviceList;

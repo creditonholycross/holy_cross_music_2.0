@@ -48,26 +48,13 @@ class Catalogue {
     );
   }
 
-  factory Catalogue.fromDb(CatalogueItem dict) {
+  factory Catalogue.fromDb(Map<dynamic, dynamic> dict) {
     return Catalogue(
-      composer: dict.composer,
-      title: dict.title,
-      parts: dict.parts,
-      publisher: dict.publisher,
-      season: dict.season,
-    );
-  }
-
-  CatalogueItemsCompanion toCompanion() {
-    return CatalogueItemsCompanion(
-      composer: Value(composer),
-      title: Value(title),
-      parts: Value(parts),
-      publisher: Value.absentIfNull(publisher),
-      season: Value.absentIfNull(season),
-      subCat: Value.absentIfNull(subCat),
-      source: Value.absentIfNull(source),
-      date: Value.absentIfNull(date),
+      composer: dict['composer'],
+      title: dict['title'],
+      parts: dict['parts'],
+      publisher: dict['publisher']!,
+      season: dict.containsKey('season') ? dict['season'] : "",
     );
   }
 }

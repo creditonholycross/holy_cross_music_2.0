@@ -94,15 +94,13 @@ class _CataloguePageState extends State<CataloguePage> {
                     if (!kIsWeb) {
                       Fluttertoast.showToast(msg: 'Music catalogue updating');
                     }
-                    updateCatalogueDb(appState.db).then(
+                    updateCatalogueDb().then(
                       (data) => {
-                        DbFunctions()
-                            .getCatalogue(appState.db)
-                            .then(
-                              (data) => setState(() {
-                                appState.setCatalogueList(data);
-                              }),
-                            ),
+                        DbFunctions().getCatalogue().then(
+                          (data) => setState(() {
+                            appState.setCatalogueList(data);
+                          }),
+                        ),
                       },
                     );
                     Timer(

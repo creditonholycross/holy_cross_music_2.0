@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"crediton-holy-cross-music","appId":"1:319589565078:android:72881b6c40b4c3b216b8b7","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"crediton-holy-cross-music","configurations":{"android":"1:319589565078:android:72881b6c40b4c3b216b8b7","web":"1:319589565078:web:45efba260b29287216b8b7"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "crediton-holy-cross-music",
+          "appId": "1:319589565078:android:72881b6c40b4c3b216b8b7",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "crediton-holy-cross-music",
+          "configurations": {
+            "android": "1:319589565078:android:72881b6c40b4c3b216b8b7",
+            "web": "1:319589565078:web:45efba260b29287216b8b7"
+          }
+        }
+      }
+    }
+  },
+  "emulators": {
+    "singleProjectMode": true
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

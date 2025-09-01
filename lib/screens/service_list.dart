@@ -9,6 +9,7 @@ import 'package:holy_cross_music/models/event.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
+import 'package:holy_cross_music/screens/month_overview.dart';
 import 'package:holy_cross_music/screens/service_music.dart';
 import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
@@ -114,32 +115,32 @@ class _ServiceListPageState extends State<ServiceListPage> {
                                   ),
                                 ),
                               ),
-                              // Expanded(
-                              // child: OutlinedButton(
-                              //   onPressed: () {
-                              //     Navigator.of(context).push(
-                              //       MaterialPageRoute(
-                              //         builder: (context) => MonthOverviewPage(
-                              //           monthlyMusic: serviceList![i],
-                              //         ),
-                              //       ),
-                              //     );
-                              //   },
-                              //   style: ElevatedButton.styleFrom(
-                              //     foregroundColor: Theme.of(
-                              //       context,
-                              //     ).colorScheme.onSurface,
-                              //     elevation: 2,
-                              //   ),
-                              //   child: const Text(
-                              //     'Overview',
-                              //     style: TextStyle(
-                              //       fontWeight: FontWeight.bold,
-                              //       fontSize: 24,
-                              //     ),
-                              //   ),
-                              // ),
-                              // ),
+                              Expanded(
+                                child: OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => MonthOverviewPage(
+                                          monthlyMusic: serviceList![i],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
+                                    elevation: 2,
+                                  ),
+                                  child: const Text(
+                                    'Overview',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                           ListView.builder(
