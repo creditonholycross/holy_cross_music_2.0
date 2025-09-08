@@ -1,4 +1,4 @@
-package com.creditonholycross.holy_cross_music
+package com.creditonholycross.musiclist
 
 import io.flutter.embedding.android.FlutterActivity
 

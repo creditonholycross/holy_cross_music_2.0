@@ -91,7 +91,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
 
     final newUserInfo = <String, String>{
       'email': userEmail,
-      'user_level': 'user',
+      'userLevel': 'user',
     };
 
     var db = FirebaseFirestore.instance;
@@ -182,7 +182,16 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: TextFormField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+
                         border: OutlineInputBorder(),
                         labelText: 'Email',
                       ),
@@ -219,7 +228,17 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                             _formKey.currentState!.reset();
                           }
                         },
-                        child: const Text('Submit'),
+                        style: ButtonStyle(
+                          shadowColor: WidgetStatePropertyAll(
+                            Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        child: Text(
+                          'Submit',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
                       ),
                     ),
                   ),

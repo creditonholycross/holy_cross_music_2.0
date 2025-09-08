@@ -59,19 +59,110 @@ class Music {
     };
   }
 
-  factory Music.fromDb(MusicItem dict) {
-    return Music(
-      date: dict.date,
-      time: dict.time,
-      rehearsalTime: dict.rehearsalTime,
-      serviceType: dict.serviceType,
-      musicType: dict.musicType,
-      title: dict.title,
-      composer: dict.composer,
-      link: dict.link,
-      serviceOrganist: dict.serviceOrganist,
-      colour: dict.colour,
-    );
+  factory Music.fromDb(Map<String, dynamic>? dict) {
+    return switch (dict) {
+      {
+        'id': String id,
+        'service_date': int date,
+        'service_time': int time,
+        'rehearsalTime': int? rehearsalTime,
+        'serviceType': String serviceType,
+        'musicType': String musicType,
+        'title': String title,
+        'composer': String? composer,
+        'link': String? link,
+        'serviceOrganist': String? serviceOrganist,
+        'colour': String? colour,
+      } =>
+        Music(
+          date: date.toString(),
+          time: time.toString(),
+          rehearsalTime: rehearsalTime.toString(),
+          serviceType: serviceType,
+          musicType: musicType,
+          title: title,
+          composer: composer,
+          link: link,
+          serviceOrganist: serviceOrganist,
+          colour: colour,
+        ),
+      {
+        'id': String id,
+        'service_date': int date,
+        'service_time': int time,
+        'rehearsalTime': int? rehearsalTime,
+        'serviceType': String serviceType,
+        'musicType': String musicType,
+        'title': int title,
+        'composer': String? composer,
+        'link': String? link,
+        'serviceOrganist': String? serviceOrganist,
+        'colour': String? colour,
+      } =>
+        Music(
+          date: date.toString(),
+          time: time.toString(),
+          rehearsalTime: rehearsalTime.toString(),
+          serviceType: serviceType,
+          musicType: musicType,
+          title: title.toString(),
+          composer: composer,
+          link: link,
+          serviceOrganist: serviceOrganist,
+          colour: colour,
+        ),
+      {
+        'id': String id,
+        'service_date': int date,
+        'service_time': int time,
+        'rehearsalTime': String? rehearsalTime,
+        'serviceType': String serviceType,
+        'musicType': String musicType,
+        'title': String title,
+        'composer': String? composer,
+        'link': String? link,
+        'serviceOrganist': String? serviceOrganist,
+        'colour': String? colour,
+      } =>
+        Music(
+          date: date.toString(),
+          time: time.toString(),
+          rehearsalTime: rehearsalTime,
+          serviceType: serviceType,
+          musicType: musicType,
+          title: title.toString(),
+          composer: composer,
+          link: link,
+          serviceOrganist: serviceOrganist,
+          colour: colour,
+        ),
+      {
+        'id': String id,
+        'service_date': int date,
+        'service_time': int time,
+        'rehearsalTime': String? rehearsalTime,
+        'serviceType': String serviceType,
+        'musicType': String musicType,
+        'title': int title,
+        'composer': String? composer,
+        'link': String? link,
+        'serviceOrganist': String? serviceOrganist,
+        'colour': String? colour,
+      } =>
+        Music(
+          date: date.toString(),
+          time: time.toString(),
+          rehearsalTime: rehearsalTime,
+          serviceType: serviceType,
+          musicType: musicType,
+          title: title.toString(),
+          composer: composer,
+          link: link,
+          serviceOrganist: serviceOrganist,
+          colour: colour,
+        ),
+      _ => throw const FormatException('Failed to load music from db.'),
+    };
   }
 
   Map<String, Object?> toMap() {
@@ -88,21 +179,6 @@ class Music {
       'serviceOrganist': serviceOrganist,
       'colour': colour,
     };
-  }
-
-  MusicItemsCompanion toCompanion() {
-    return MusicItemsCompanion(
-      date: Value(date),
-      time: Value(time),
-      rehearsalTime: Value.absentIfNull(rehearsalTime),
-      serviceType: Value(serviceType),
-      musicType: Value(musicType),
-      title: Value(title),
-      composer: Value.absentIfNull(composer),
-      link: Value.absentIfNull(link),
-      serviceOrganist: Value.absentIfNull(serviceOrganist),
-      colour: Value.absentIfNull(colour),
-    );
   }
 
   static String parseDate(String date) {

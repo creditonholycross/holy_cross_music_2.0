@@ -55,17 +55,17 @@ class Service {
 
   static Color serviceColor(String theme, Brightness brightness) {
     if (brightness == Brightness.light) {
-      return GlobalThemeData.themeLightMap[theme]!.colorScheme.primary;
+      return GlobalThemeData.themeLightMap[theme]!.colorScheme.tertiary;
     } else {
-      return GlobalThemeData.themeDarkMap[theme]!.colorScheme.primary;
+      return GlobalThemeData.themeDarkMap[theme]!.colorScheme.tertiary;
     }
   }
 
   Color servicePrimaryColour(Brightness brightness) {
     if (brightness == Brightness.light) {
-      return GlobalThemeData.themeLightMap[colour]!.colorScheme.primary;
+      return GlobalThemeData.themeLightMap[colour]!.colorScheme.tertiary;
     } else {
-      return GlobalThemeData.themeDarkMap[colour]!.colorScheme.primary;
+      return GlobalThemeData.themeDarkMap[colour]!.colorScheme.tertiary;
     }
   }
 

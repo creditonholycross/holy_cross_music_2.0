@@ -15,17 +15,17 @@ var musicLink =
 var testingMusicLink =
     'https://docs.google.com/spreadsheets/d/1r71O_Bm_-dkKBTtyAPMYMfhh1lg5-MwypKAnEs2eYkQ/gviz/tq?tqx=out:csv&sheet=testing';
 
-Future<Service?> fetchMusic(AppDatabase db) async {
+Future<Service?> fetchMusic() async {
   print('fetching music');
-  var allServices = await DbFunctions().getServiceList(db);
+  var allServices = await DbFunctions().getServiceList();
 
   if (allServices == null) {
-    updateMusicDb(db);
+    updateMusicDb();
   }
   // return await DbFunctions().getNextService();
 }
 
-Future<void> updateMusicDb(AppDatabase db) async {
+Future<void> updateMusicDb() async {
   print('updating db');
 
   String musicURI;
@@ -54,8 +54,8 @@ Future<void> updateMusicDb(AppDatabase db) async {
     if (parsedMusic.isEmpty) {
       return;
     }
-    // await DbFunctions().deleteAllMusic();
-    await DbFunctions().addMultipleMusic(db, parsedMusic);
+    await DbFunctions().deleteAllMusic();
+    await DbFunctions().addMultipleMusic(parsedMusic);
   } else {
     if (!kIsWeb) {
       Fluttertoast.showToast(msg: 'Failed to update music');

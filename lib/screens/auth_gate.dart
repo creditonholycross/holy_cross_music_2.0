@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
 
 import 'home.dart';
@@ -55,12 +56,6 @@ class _AuthGateState extends State<AuthGate> {
     return userAutherised;
   }
 
-  // @override
-  // void initState() {
-  //   checkUserStatus(context);
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<ApplicationState>();
@@ -70,31 +65,7 @@ class _AuthGateState extends State<AuthGate> {
         if (!snapshot.hasData) {
           return SignInWidget();
         } else {
-          return FutureBuilder(
-            future: checkUserStatus(context),
-            builder: (_, data) {
-              if (data.hasData) {
-                if (!data.data!) {
-                  return SignInWidget();
-                } else {
-                  return const HomeScreen();
-                }
-              } else {
-                return Center(
-                  child: Column(
-                    spacing: 16.0,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ],
-                  ),
-                );
-              }
-            },
-          );
+          return const HomeScreen();
         }
       },
     );
@@ -109,32 +80,41 @@ class SignInWidget extends StatelessWidget {
     return SignInScreen(
       showAuthActionSwitch: false,
       providers: [EmailAuthProvider()],
-      // headerBuilder: (context, constraints, shrinkOffset) {
-      //   return Padding(
-      //     padding: const EdgeInsets.all(20),
-      //     child: AspectRatio(
-      //       aspectRatio: 1,
-      //       child: Image.asset('assets/crediton_boniface_community.png'),
-      //     ),
-      //   );
-      // },
-      subtitleBuilder: (context, action) {
+      headerBuilder: (context, constraints, shrinkOffset) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: const Text(
-            'Welcome to the Holy Cross Music app, please sign in!',
+          padding: const EdgeInsets.all(10),
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Image.asset('images/crediton_boniface_community.png'),
           ),
         );
       },
-      // sideBuilder: (context, shrinkOffset) {
-      //   return Padding(
-      //     padding: const EdgeInsets.all(20),
-      //     child: AspectRatio(
-      //       aspectRatio: 1,
-      //       child: Image.asset('assets/crediton_boniface_community.png'),
-      //     ),
-      //   );
-      // },
+      subtitleBuilder: (context, action) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Welcome to the Holy Cross Music app, please sign in!',
+              ),
+              const Text(' '),
+              const Text(
+                'If signing in for the first time, please click on "Forgotten Password" to reset your password.',
+              ),
+            ],
+          ),
+        );
+      },
+      sideBuilder: (context, shrinkOffset) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: AspectRatio(
+            aspectRatio: 1,
+            child: Image.asset('images/crediton_boniface_community.png'),
+          ),
+        );
+      },
     );
   }
 }
