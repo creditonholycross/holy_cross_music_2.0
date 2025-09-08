@@ -56,12 +56,6 @@ class _AuthGateState extends State<AuthGate> {
     return userAutherised;
   }
 
-  // @override
-  // void initState() {
-  //   checkUserStatus(context);
-  //   super.initState();
-  // }
-
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<ApplicationState>();
@@ -69,39 +63,10 @@ class _AuthGateState extends State<AuthGate> {
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          // onThemeChanged('login', appState);
           return SignInWidget();
         } else {
-          // onThemeChanged(appState.getThemeName(), appState);
           return const HomeScreen();
         }
-        // return FutureBuilder(
-        //   future: checkUserStatus(context),
-        //   builder: (_, data) {
-        //     if (data.hasData) {
-        //       if (!data.data!) {
-        //         return SignInWidget();
-        //       } else {
-        //         onThemeChanged(appState.getThemeName(), appState);
-        //         return const HomeScreen();
-        //       }
-        //     } else {
-        //       return Center(
-        //         child: Column(
-        //           spacing: 16.0,
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: <Widget>[
-        //             Padding(
-        //               padding: const EdgeInsets.symmetric(horizontal: 16),
-        //               child: CircularProgressIndicator(),
-        //             ),
-        //           ],
-        //         ),
-        //       );
-        //     }
-        //   },
-        // );
-        // }
       },
     );
   }
@@ -127,8 +92,17 @@ class SignInWidget extends StatelessWidget {
       subtitleBuilder: (context, action) {
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          child: const Text(
-            'Welcome to the Holy Cross Music app, please sign in!',
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Welcome to the Holy Cross Music app, please sign in!',
+              ),
+              const Text(' '),
+              const Text(
+                'If signing in for the first time, please click on "Forgotten Password" to reset your password.',
+              ),
+            ],
           ),
         );
       },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/app_state.dart';
+import 'package:holy_cross_music/screens/request_delete_user.dart';
 import 'package:provider/provider.dart';
 
 import 'screens/auth_gate.dart';
@@ -13,7 +14,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: appState.getLightTheme(),
       darkTheme: appState.getDarkTheme(),
-      home: const AuthGate(),
+      home: AuthGate(),
+      routes: {'/delete-account': (context) => RequestDeleteUserScreen()},
     );
   }
 }
