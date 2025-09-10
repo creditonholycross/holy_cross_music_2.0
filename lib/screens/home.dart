@@ -12,6 +12,7 @@ import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
 import 'package:holy_cross_music/screens/catalogueScreen.dart';
+import 'package:holy_cross_music/screens/create_service.dart';
 import 'package:holy_cross_music/screens/events.dart';
 import 'package:holy_cross_music/screens/profile.dart';
 import 'package:holy_cross_music/screens/service_list.dart';
@@ -80,7 +81,11 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: appState.serviceColour,
         title: Text(
-          ['Holy Cross Music', 'Manage Users'][currentPageIndex],
+          [
+            'Holy Cross Music',
+            'Manage Users',
+            'Create Service',
+          ][currentPageIndex],
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
         leading: currentPageIndex != 0
@@ -149,6 +154,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).colorScheme.onPrimary,
                   ),
                   label: 'Manage Users',
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.plus_one),
+                  icon: Icon(
+                    Icons.plus_one,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                  label: 'Create Service',
                 ),
               ],
             )
@@ -290,6 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         UserManagementScreen(),
+        CreateServiceScreen(),
       ][currentPageIndex],
     );
   }

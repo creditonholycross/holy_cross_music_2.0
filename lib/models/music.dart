@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import 'package:holy_cross_music/database/database.dart';
+=======
+>>>>>>> 7d264eb (Adding create users page)
 import 'package:intl/intl.dart';
 
 class Music {
@@ -197,4 +200,20 @@ class Music {
     var paddedTime = time.padLeft(6, '0');
     return '${paddedTime.substring(0, 2)}:${paddedTime.substring(2, 4)}';
   }
+}
+
+class CreateMusicItem {
+  final String? id;
+  final String musicType;
+  final String title;
+  final String? composer;
+  final String? link;
+
+  const CreateMusicItem({
+    required this.musicType,
+    required this.title,
+    this.composer,
+    this.link,
+    this.id,
+  });
 }

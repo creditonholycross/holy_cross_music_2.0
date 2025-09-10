@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/app_state.dart';
-import 'package:holy_cross_music/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GlobalThemeData {

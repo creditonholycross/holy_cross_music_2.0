@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart' hide EmailAuthProvider;
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
 
 import 'home.dart';

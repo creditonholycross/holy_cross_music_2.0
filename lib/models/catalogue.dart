@@ -1,5 +1,3 @@
-import 'package:holy_cross_music/database/database.dart';
-
 class Catalogue {
   final String? id;
   final String composer;

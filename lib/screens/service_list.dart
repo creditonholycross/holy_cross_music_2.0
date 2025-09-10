@@ -1,25 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/app_state.dart';
-import 'package:holy_cross_music/database/db_functions.dart';
-import 'package:holy_cross_music/helper/fetchMusic.dart';
-import 'package:holy_cross_music/models/catalogue.dart';
-import 'package:holy_cross_music/models/event.dart';
-import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
-import 'package:holy_cross_music/models/service.dart';
 import 'package:holy_cross_music/screens/month_overview.dart';
 import 'package:holy_cross_music/screens/service_music.dart';
-import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ServiceListPage extends StatefulWidget {
   const ServiceListPage({super.key});
@@ -44,46 +28,6 @@ class _ServiceListPageState extends State<ServiceListPage> {
           'Upcoming Services',
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
-        actions: <Widget>[
-          // IconButton(
-          //   icon: const Icon(Icons.refresh),
-          // onPressed: appState.refreshDisabled
-          //     ? null
-          //     : () async {
-          //         appState.disableRefresh();
-          //         print('Music lists updating');
-          //         if (!kIsWeb) {
-          //           Fluttertoast.showToast(msg: 'Music lists updating');
-          //         }
-          //         () {
-          //           setState(() {
-          //             updateMusicDb().then(
-          //               (data) => {
-          //                 DbFunctions().getServiceList().then(
-          //                   (data) => setState(() {
-          //                     context.read<ServiceState>().serviceList = data;
-          //                     serviceList = data;
-          //                     DbFunctions().getNextService().then(
-          //                       (data) => setState(() {
-          //                         context.read<ServiceState>().nextService =
-          //                             data;
-          //                         context
-          //                                 .read<ServiceState>()
-          //                                 .initMusicSpinner =
-          //                             false;
-          //                         wearOsSync(data);
-          //                       }),
-          //                     );
-          //                   }),
-          //                 ),
-          //               },
-          //             );
-          //           });
-          //         };
-          //         Timer(const Duration(seconds: 4), appState.enableRefresh);
-          // },
-          // ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Center(

@@ -6,8 +6,6 @@ import 'package:dart_firebase_admin/dart_firebase_admin.dart';
 import 'package:dart_firebase_admin/Auth.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/models/app_user.dart';
 import 'package:path_provider/path_provider.dart';
