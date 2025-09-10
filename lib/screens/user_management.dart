@@ -130,9 +130,6 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     await auth.deleteUser(user.uid);
     await admin.close();
 
-    var db = FirebaseFirestore.instance;
-    db.collection('users').doc(user.uid).delete();
-
     setState(() {
       context.read<ApplicationState>().removeUser(user);
     });

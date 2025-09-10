@@ -1,8 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/app_state.dart';
+import 'package:holy_cross_music/models/app_user.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:holy_cross_music/screens/auth_gate.dart';
@@ -72,6 +75,11 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       actions: [
         SignedOutAction((context) {
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (context) => const AuthGate()));
+        }),
+        AccountDeletedAction((context, user) {
           Navigator.of(
             context,
           ).push(MaterialPageRoute(builder: (context) => const AuthGate()));
