@@ -12,6 +12,7 @@
 .swiftpm/
 migrate_working_dir/
 /lib/service_account.dart
+/lib/firebase_options.dart
 .firebase/
 .firebaserc
 
