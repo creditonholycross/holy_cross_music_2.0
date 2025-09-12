@@ -167,6 +167,27 @@ class Music {
     };
   }
 
+  factory Music.fromCreateMusicItem(
+    CreateMusicItem createMusicItem,
+    String serviceType,
+    String serviceTime,
+    String serviceDate,
+    String rehearsalTime,
+    String serviceOrganist,
+  ) {
+    return Music(
+      date: serviceDate,
+      time: serviceTime,
+      rehearsalTime: rehearsalTime,
+      serviceType: serviceType,
+      musicType: createMusicItem.musicType,
+      title: createMusicItem.title as String,
+      composer: createMusicItem.composer,
+      link: createMusicItem.link,
+      serviceOrganist: serviceOrganist,
+    );
+  }
+
   Map<String, Object?> toMap() {
     return {
       'id': '$date$serviceType$musicType$title',
@@ -203,17 +224,62 @@ class Music {
 }
 
 class CreateMusicItem {
-  final String? id;
-  final String musicType;
-  final String title;
-  final String? composer;
-  final String? link;
+  String? id;
+  String musicType;
+  String? title;
+  String? composer;
+  String? link;
+  bool editing;
 
-  const CreateMusicItem({
+  CreateMusicItem({
     required this.musicType,
-    required this.title,
+    this.title,
     this.composer,
     this.link,
     this.id,
+    required this.editing,
   });
+}
+
+class HymnItem {
+  String? id;
+  String musicType = 'Hymn';
+  String? number;
+  String? title;
+
+  HymnItem({this.title, this.number, this.id});
+
+  factory HymnItem.fromCreateMusicItem(CreateMusicItem createMusicItem) {
+    if (createMusicItem.title == null) {
+      return HymnItem();
+    }
+
+    List<String> titleSplit = createMusicItem.title?.split('#') as List<String>;
+    return HymnItem(
+      number: titleSplit[0],
+      title: titleSplit.length == 2 ? titleSplit[1] : '',
+    );
+  }
+}
+
+class PsalmItem {
+  String? id;
+  String musicType = 'Psalm';
+  String? number;
+  String? verses;
+
+  PsalmItem({this.number, this.verses, this.id});
+
+  factory PsalmItem.fromCreateMusicItem(CreateMusicItem createMusicItem) {
+    if (createMusicItem.title == null) {
+      return PsalmItem();
+    }
+
+    List<String> titleSplit =
+        createMusicItem.title?.split(' v') as List<String>;
+    return PsalmItem(
+      number: titleSplit[0],
+      verses: titleSplit.length == 2 ? 'v${titleSplit[1]}' : '',
+    );
+  }
 }

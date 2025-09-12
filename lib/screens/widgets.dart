@@ -152,6 +152,81 @@ class TitleFormatting extends StatelessWidget {
   }
 }
 
+class HymnTitleFormatting extends StatelessWidget {
+  const HymnTitleFormatting({super.key, required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    var titleItalics = '';
+    var musicTitle = title;
+
+    if (title.contains('#')) {
+      var hymnSplit = title.split('#');
+      titleItalics = ' ${hymnSplit.sublist(1).join(' ').trim()}';
+      musicTitle = hymnSplit[0];
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, top: 4, bottom: 4),
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: musicTitle, style: const TextStyle(fontSize: 18)),
+            if (titleItalics != '')
+              TextSpan(
+                text: titleItalics,
+                style: const TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 16,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PsalmTitleFormatting extends StatelessWidget {
+  PsalmTitleFormatting({super.key, required this.title});
+
+  final psalmRegex = RegExp(r'v\d{1,2}');
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    var titleItalics = '';
+    var musicTitle = title;
+
+    if (psalmRegex.hasMatch(title)) {
+      var psalmSplit = title.split('v');
+      titleItalics = ' v${psalmSplit[1]}';
+      musicTitle = psalmSplit[0].trim();
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 16, top: 4, bottom: 4),
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(text: musicTitle, style: const TextStyle(fontSize: 18)),
+            if (titleItalics != '')
+              TextSpan(
+                text: titleItalics,
+                style: const TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 16,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class PlayLinkWidget extends StatelessWidget {
   const PlayLinkWidget({super.key, required this.music});
 
