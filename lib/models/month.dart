@@ -1,4 +1,5 @@
 import 'package:holy_cross_music/models/event.dart';
+import 'package:holy_cross_music/models/fundraisingEvent.dart';
 import 'package:holy_cross_music/models/service.dart';
 
 var monthConv = {
@@ -58,6 +59,38 @@ class MonthlyEvents {
       monthInt = '13';
     }
     return MonthlyEvents(
+      monthName: monthName,
+      monthInt: monthInt,
+      year: year,
+      events: events,
+    );
+  }
+}
+
+class MonthlyFundraisingEvents {
+  final String monthName;
+  final String monthInt;
+  final String year;
+  final List<FundraisingEvent> events;
+
+  const MonthlyFundraisingEvents({
+    required this.monthName,
+    required this.monthInt,
+    required this.year,
+    required this.events,
+  });
+
+  factory MonthlyFundraisingEvents.createFundraisingEvent(
+    String date,
+    List<FundraisingEvent> events,
+  ) {
+    var monthInt = date.substring(5, 7);
+    var year = Event.getYear(date);
+    var monthName = monthConv[monthInt] ?? 'TBC';
+    if (monthName == 'TBC') {
+      monthInt = '13';
+    }
+    return MonthlyFundraisingEvents(
       monthName: monthName,
       monthInt: monthInt,
       year: year,
