@@ -33,6 +33,19 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<Service> builtServices = [];
+  Service? currentBuildService;
+
+  void setCurrentBuildService(Service service) {
+    currentBuildService = service;
+    notifyListeners();
+  }
+
+  void addBuiltService(Service service) {
+    builtServices.add(service);
+    notifyListeners();
+  }
+
   // Catalogue
 
   List<Catalogue>? catalogueList;

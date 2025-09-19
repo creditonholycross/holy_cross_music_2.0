@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import 'package:holy_cross_music/database/database.dart';
-=======
->>>>>>> 7d264eb (Adding create users page)
 import 'package:intl/intl.dart';
 
 class Music {

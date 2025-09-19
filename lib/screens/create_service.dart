@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
+import 'package:holy_cross_music/screens/build_services.dart';
 import 'package:holy_cross_music/screens/widgets.dart';
 import 'package:holy_cross_music/utils/string_extension.dart';
+import 'package:provider/provider.dart';
 
 enum SampleItem {
   hymn,
@@ -14,8 +17,26 @@ enum SampleItem {
   benedictionProper,
 }
 
+List<PopupMenuItem<SampleItem>> evensongItems = [
+  const PopupMenuItem(value: SampleItem.hymn, child: Text('Hymn')),
+  const PopupMenuItem(value: SampleItem.psalm, child: Text('Psalm')),
+  const PopupMenuItem(value: SampleItem.introit, child: Text('Introit')),
+  const PopupMenuItem(value: SampleItem.magnificat, child: Text('Magnificat')),
+  const PopupMenuItem(
+    value: SampleItem.nuncDimittis,
+    child: Text('Nunc Dimittis'),
+  ),
+  const PopupMenuItem(value: SampleItem.anthem, child: Text('Anthem')),
+  const PopupMenuItem(
+    value: SampleItem.benedictionProper,
+    child: Text('Benediction Proper'),
+  ),
+];
+
 class CreateServiceScreen extends StatefulWidget {
-  const CreateServiceScreen({super.key});
+  const CreateServiceScreen({super.key, required this.serviceName});
+
+  final String serviceName;
 
   @override
   State<CreateServiceScreen> createState() => _CreateServiceScreenState();
@@ -40,36 +61,33 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     });
   }
 
-  List<PopupMenuItem<SampleItem>> evensongItems = [
-    const PopupMenuItem(value: SampleItem.hymn, child: Text('Hymn')),
-    const PopupMenuItem(value: SampleItem.psalm, child: Text('Psalm')),
-    const PopupMenuItem(value: SampleItem.introit, child: Text('Introit')),
-    const PopupMenuItem(
-      value: SampleItem.magnificat,
-      child: Text('Magnificat'),
-    ),
-    const PopupMenuItem(
-      value: SampleItem.nuncDimittis,
-      child: Text('Nunc Dimittis'),
-    ),
-    const PopupMenuItem(value: SampleItem.anthem, child: Text('Anthem')),
-    const PopupMenuItem(
-      value: SampleItem.benedictionProper,
-      child: Text('Benediction Proper'),
-    ),
-  ];
-
   Service createService() {
-    List<Music> serviceMusic = [];
+    List<Music> serviceMusic = _musicItems
+        .map(
+          (e) => Music.fromCreateMusicItem(
+            e,
+            'Evensong',
+            '18:00:00',
+            '2025-09-21',
+            '16:45:00',
+            'Jon Rawles',
+          ),
+        )
+        .toList();
+
+    return Service.createService('2025-09-21', serviceMusic);
   }
+
+  Map<String, dynamic> serviceTypeMap = {'evensong': evensongItems};
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<ApplicationState>();
+
     final _controller = ScrollController();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final double old = _controller.position.pixels;
-      final double oldMax = _controller.position.maxScrollExtent;
       if (_controller.hasClients &&
           _controller.position.maxScrollExtent - old != 0) {
         _controller.animateTo(
@@ -86,6 +104,16 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     String serviceDate = '';
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: appState.serviceColour,
+        iconTheme: IconThemeData(
+          color: Theme.of(context).colorScheme.onPrimary,
+        ),
+        title: Text(
+          'Create Services',
+          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+        ),
+      ),
       floatingActionButton: PopupMenuButton<SampleItem>(
         icon: Container(
           height: 50,
@@ -137,7 +165,11 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           _formKey.currentState!.reset();
-                          createService();
+                          Service service = createService();
+                          setState(() {
+                            appState.addBuiltService(service);
+                          });
+                          Navigator.of(context).pop();
                         }
                       },
                       style: ButtonStyle(
