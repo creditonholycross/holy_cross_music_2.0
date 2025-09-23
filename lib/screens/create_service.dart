@@ -7,7 +7,7 @@ import 'package:holy_cross_music/screens/widgets.dart';
 import 'package:holy_cross_music/utils/string_extension.dart';
 import 'package:provider/provider.dart';
 
-enum SampleItem {
+enum TemplateItem {
   hymn,
   psalm,
   introit,
@@ -17,26 +17,29 @@ enum SampleItem {
   benedictionProper,
 }
 
-List<PopupMenuItem<SampleItem>> evensongItems = [
-  const PopupMenuItem(value: SampleItem.hymn, child: Text('Hymn')),
-  const PopupMenuItem(value: SampleItem.psalm, child: Text('Psalm')),
-  const PopupMenuItem(value: SampleItem.introit, child: Text('Introit')),
-  const PopupMenuItem(value: SampleItem.magnificat, child: Text('Magnificat')),
+List<PopupMenuItem<TemplateItem>> evensongItems = [
+  const PopupMenuItem(value: TemplateItem.hymn, child: Text('Hymn')),
+  const PopupMenuItem(value: TemplateItem.psalm, child: Text('Psalm')),
+  const PopupMenuItem(value: TemplateItem.introit, child: Text('Introit')),
   const PopupMenuItem(
-    value: SampleItem.nuncDimittis,
+    value: TemplateItem.magnificat,
+    child: Text('Magnificat'),
+  ),
+  const PopupMenuItem(
+    value: TemplateItem.nuncDimittis,
     child: Text('Nunc Dimittis'),
   ),
-  const PopupMenuItem(value: SampleItem.anthem, child: Text('Anthem')),
+  const PopupMenuItem(value: TemplateItem.anthem, child: Text('Anthem')),
   const PopupMenuItem(
-    value: SampleItem.benedictionProper,
+    value: TemplateItem.benedictionProper,
     child: Text('Benediction Proper'),
   ),
 ];
 
 class CreateServiceScreen extends StatefulWidget {
-  const CreateServiceScreen({super.key, required this.serviceName});
+  const CreateServiceScreen({super.key, required this.templateName});
 
-  final String serviceName;
+  final ServiceTemplate templateName;
 
   @override
   State<CreateServiceScreen> createState() => _CreateServiceScreenState();
@@ -46,7 +49,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   List<CreateMusicItem> _musicItems = <CreateMusicItem>[
     CreateMusicItem(musicType: 'Hymn', title: '100', editing: false),
   ];
-  SampleItem? selectedItem;
+  TemplateItem? selectedItem;
   int editStateIndex = -1;
 
   void _setEditStateIndex(int newValue) {
@@ -61,24 +64,33 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     });
   }
 
-  Service createService() {
+  Service createService(
+    String serviceTitle,
+    String serviceDate,
+    String serviceTime,
+    String? rehearsalTime,
+    String? organist,
+    ServiceTemplate serviceTemplate,
+  ) {
     List<Music> serviceMusic = _musicItems
         .map(
           (e) => Music.fromCreateMusicItem(
             e,
-            'Evensong',
-            '18:00:00',
-            '2025-09-21',
-            '16:45:00',
-            'Jon Rawles',
+            serviceTitle,
+            serviceDate,
+            serviceTime,
+            rehearsalTime,
+            organist,
           ),
         )
         .toList();
 
-    return Service.createService('2025-09-21', serviceMusic);
+    return Service.createService(serviceDate, serviceMusic, serviceTemplate);
   }
 
-  Map<String, dynamic> serviceTypeMap = {'evensong': evensongItems};
+  Map<ServiceTemplate, dynamic> serviceTypeMap = {
+    ServiceTemplate.evensong: evensongItems,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -100,8 +112,13 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
 
     final _formKey = GlobalKey<FormState>();
     final _cardFormKey = GlobalKey<FormState>();
+
     String serviceTitle = '';
     String serviceDate = '';
+    String serviceTime = '';
+    String? rehearsalTime;
+    String? organist;
+    ServiceTemplate serviceTemplate = widget.templateName;
 
     return Scaffold(
       appBar: AppBar(
@@ -114,7 +131,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
           style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
         ),
       ),
-      floatingActionButton: PopupMenuButton<SampleItem>(
+      floatingActionButton: PopupMenuButton<TemplateItem>(
         icon: Container(
           height: 50,
           width: 50,
@@ -130,7 +147,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
           child: Icon(Icons.add),
         ),
         initialValue: selectedItem,
-        onSelected: (SampleItem item) {
+        onSelected: (TemplateItem item) {
           setState(() {
             selectedItem = item;
             _musicItems.add(
@@ -153,7 +170,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                 children: [
                   ListTile(
                     title: Text(
-                      'Evensong',
+                      serviceTemplate.name.capitalize(),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 24,
@@ -165,7 +182,14 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           _formKey.currentState!.reset();
-                          Service service = createService();
+                          Service service = createService(
+                            serviceTitle,
+                            serviceDate,
+                            serviceTime,
+                            rehearsalTime,
+                            organist,
+                            serviceTemplate,
+                          );
                           setState(() {
                             appState.addBuiltService(service);
                           });
@@ -225,13 +249,92 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         labelStyle: TextStyle(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
-                        labelText: 'Service Date',
+                        labelText: 'Service Date *',
+                        hintText: 'dd/mm/yyyy',
+                      ),
+                      keyboardType: TextInputType.datetime,
+                      validator: (value) {
+                        return null;
+                      },
+                      onSaved: (value) {
+                        serviceTime = value!;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: 16.0,
+                    ),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        labelText: 'Service Time *',
+                      ),
+                      keyboardType: TextInputType.datetime,
+                      inputFormatters: [],
+                      validator: (value) {
+                        return null;
+                      },
+                      onSaved: (value) {
+                        serviceTime = value!;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: 16.0,
+                    ),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        labelText: 'Rehearsal Time',
                       ),
                       validator: (value) {
                         return null;
                       },
                       onSaved: (value) {
-                        serviceDate = value!;
+                        rehearsalTime = value!;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 16.0,
+                      horizontal: 16.0,
+                    ),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                        ),
+                        labelText: 'Organist',
+                      ),
+                      validator: (value) {
+                        return null;
+                      },
+                      onSaved: (value) {
+                        organist = value!;
                       },
                     ),
                   ),

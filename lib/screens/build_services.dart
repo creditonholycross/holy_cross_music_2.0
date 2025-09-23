@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/models/music.dart';
+import 'package:holy_cross_music/models/service.dart';
 import 'package:holy_cross_music/screens/create_service.dart';
 import 'package:provider/provider.dart';
-
-enum ServiceItem { eucharist, mattins, evensong }
 
 class ServiceBuilderScreen extends StatefulWidget {
   const ServiceBuilderScreen({super.key});
@@ -14,20 +13,26 @@ class ServiceBuilderScreen extends StatefulWidget {
 }
 
 class _ServiceBuilderScreenState extends State<ServiceBuilderScreen> {
-  List<PopupMenuItem<ServiceItem>> serviceItems = [
-    const PopupMenuItem(value: ServiceItem.eucharist, child: Text('Eucharist')),
-    const PopupMenuItem(value: ServiceItem.mattins, child: Text('Mattins')),
-    const PopupMenuItem(value: ServiceItem.evensong, child: Text('Evensong')),
+  List<PopupMenuItem<ServiceTemplate>> serviceItems = [
+    const PopupMenuItem(
+      value: ServiceTemplate.eucharist,
+      child: Text('Eucharist'),
+    ),
+    const PopupMenuItem(value: ServiceTemplate.mattins, child: Text('Mattins')),
+    const PopupMenuItem(
+      value: ServiceTemplate.evensong,
+      child: Text('Evensong'),
+    ),
   ];
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<ApplicationState>();
     var serviceList = appState.builtServices;
-    ServiceItem? selectedItem;
+    ServiceTemplate? selectedItem;
 
     return Scaffold(
-      floatingActionButton: PopupMenuButton<ServiceItem>(
+      floatingActionButton: PopupMenuButton<ServiceTemplate>(
         icon: Container(
           height: 50,
           width: 50,
@@ -43,10 +48,10 @@ class _ServiceBuilderScreenState extends State<ServiceBuilderScreen> {
           child: Icon(Icons.add),
         ),
         initialValue: selectedItem,
-        onSelected: (ServiceItem item) {
+        onSelected: (ServiceTemplate item) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => CreateServiceScreen(serviceName: item.name),
+              builder: (context) => CreateServiceScreen(templateName: item),
             ),
           );
         },

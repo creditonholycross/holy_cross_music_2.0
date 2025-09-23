@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/screens/request_delete_user.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +14,12 @@ class MyApp extends StatelessWidget {
     final appState = context.watch<ApplicationState>();
     return MaterialApp(
       theme: appState.getLightTheme(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [Locale('en', 'GB')],
       darkTheme: appState.getDarkTheme(),
       home: AuthGate(),
       routes: {'/delete-account': (context) => RequestDeleteUserScreen()},

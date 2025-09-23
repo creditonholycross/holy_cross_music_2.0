@@ -166,10 +166,10 @@ class Music {
   factory Music.fromCreateMusicItem(
     CreateMusicItem createMusicItem,
     String serviceType,
-    String serviceTime,
     String serviceDate,
-    String rehearsalTime,
-    String serviceOrganist,
+    String serviceTime,
+    String? rehearsalTime,
+    String? serviceOrganist,
   ) {
     return Music(
       date: serviceDate,

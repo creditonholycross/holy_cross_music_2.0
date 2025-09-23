@@ -2,6 +2,8 @@ import 'package:holy_cross_music/models/music.dart';
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/themes/themes.dart';
 
+enum ServiceTemplate { eucharist, mattins, evensong }
+
 class Service {
   final String date;
   final String time;
@@ -10,6 +12,7 @@ class Service {
   final List<Music> music;
   final String? organist;
   final String colour;
+  final String? serviceTemplate;
 
   const Service({
     required this.date,
@@ -19,9 +22,14 @@ class Service {
     required this.music,
     required this.organist,
     required this.colour,
+    this.serviceTemplate,
   });
 
-  factory Service.createService(String id, List<Music> music) {
+  factory Service.createService(
+    String id,
+    List<Music> music, [
+    ServiceTemplate? serviceTemplate,
+  ]) {
     var idSplit = id.split(',');
     var organists = [];
     var colour = 'base';
@@ -50,6 +58,7 @@ class Service {
       music: music,
       organist: organists.join(', '),
       colour: colour,
+      serviceTemplate: serviceTemplate?.name,
     );
   }
 
