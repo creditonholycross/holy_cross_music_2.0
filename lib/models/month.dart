@@ -3,6 +3,7 @@ import 'package:holy_cross_music/models/fundraisingEvent.dart';
 import 'package:holy_cross_music/models/service.dart';
 
 var monthConv = {
+  '00': 'Recurring',
   '01': 'January',
   '02': 'February',
   '03': 'March',

@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 var eventsLink =
-    'https://docs.google.com/spreadsheets/d/1r71O_Bm_-dkKBTtyAPMYMfhh1lg5-MwypKAnEs2eYkQ/gviz/tq?tqx=out:csv&sheet=FundraisingEvents';
+    'https://docs.google.com/spreadsheets/d/1r71O_Bm_-dkKBTtyAPMYMfhh1lg5-MwypKAnEs2eYkQ/gviz/tq?tqx=out:csv&sheet=FundraisingEventsTesting';
 
 Future<Map<String, List<MonthlyFundraisingEvents>>>
 fetchFundraisingEvents() async {
@@ -70,13 +70,16 @@ Map<String, List<MonthlyFundraisingEvents>> groupEventsByMonth(
   var monthlyList = <MonthlyFundraisingEvents>[];
 
   var filteredList = eventList.where((item) {
-    var startDatetime = DateTime.parse(item.date);
+    if (item.date == null || item.day != null) {
+      return true;
+    }
+    var startDatetime = DateTime.parse(item.date as String);
     return startDatetime.compareTo(DateTime.now()) > 0;
   });
 
   var serviceMap = groupBy(
     filteredList,
-    (item) => item.getdateLength(item.date),
+    (item) => item.getdateLength(item.date, item.day),
   );
 
   serviceMap.forEach(
