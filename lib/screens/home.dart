@@ -152,141 +152,355 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : null,
       body: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              Image.asset('images/church.jpg', fit: BoxFit.cover),
-              if (!appState.initMusicSpinner)
-                Column(
-                  children: [
-                    if (appState.nextService == null)
-                      const ListTile(
-                        title: Text(
-                          'Next service:',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text('No upcoming services'),
+        Column(
+          children: [
+            Image.asset('images/church.jpg', fit: BoxFit.cover),
+            if (appState.nextService == null)
+              const ListTile(
+                title: Text(
+                  'Next service:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text('No upcoming services'),
+              ),
+            if (appState.nextService != null)
+              ListTile(
+                title: const Text(
+                  'Next service:',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                ),
+                subtitle: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text:
+                            '${Music.parseDate(appState.nextService!.date)} - ${appState.nextService!.serviceType}',
+                        style: const TextStyle(fontSize: 18),
                       ),
-                    if (appState.nextService != null)
-                      ListTile(
-                        title: const Text(
-                          'Next service:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                      TextSpan(
+                        text:
+                            ' \nRehearsal - ${Music.formatTime(appState.nextService!.rehearsalTime)}\nService - ${Music.formatTime(appState.nextService!.time)}',
+                        style: const TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontSize: 16,
                         ),
-                        subtitle: Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${Music.parseDate(appState.nextService!.date)} - ${appState.nextService!.serviceType}',
-                                style: const TextStyle(fontSize: 18),
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  appState.setCurrentService(appState.nextService!);
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const ServiceMusicPage(),
+                    ),
+                  );
+                },
+              ),
+            GridView.count(
+              crossAxisCount: 3,
+              physics: NeverScrollableScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              children: [
+                if (appState.nextService != null)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: InkWell(
+                      child: Card(
+                        color: appState.serviceColour,
+                        shadowColor: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Next\nservice',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.onPrimary,
                               ),
-                              TextSpan(
-                                text:
-                                    ' \nRehearsal - ${Music.formatTime(appState.nextService!.rehearsalTime)}\nService - ${Music.formatTime(appState.nextService!.time)}',
-                                style: const TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          appState.setCurrentService(appState.nextService!);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ServiceMusicPage(),
                             ),
-                          );
-                        },
+                          ],
+                        ),
                       ),
-                    if (appState.nextService != null)
-                      Card(
-                        child: ListTile(
-                          title: const Text(
-                            'View next service',
+                      onTap: () {
+                        appState.setCurrentService(appState.nextService!);
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ServiceMusicPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                if (appState.nextService != null)
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    child: InkWell(
+                      child: Card(
+                        color: appState.serviceColour,
+                        shadowColor: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Upcoming\nservices',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ServiceListPage(),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  child: InkWell(
+                    child: Card(
+                      color: appState.serviceColour,
+                      shadowColor: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Music\ncatalogue',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 18,
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           ),
-                          onTap: () {
-                            appState.setCurrentService(appState.nextService!);
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const ServiceMusicPage(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    if (appState.nextService != null)
-                      Card(
-                        child: ListTile(
-                          title: const Text(
-                            'View upcoming services',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          onTap: () async {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const ServiceListPage(),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    Card(
-                      child: ListTile(
-                        title: const Text(
-                          'View upcoming choir events and fundraising',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        onTap: () async {
-                          // Fluttertoast.showToast(msg: 'Events');
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const EventsPage(),
-                            ),
-                          );
-                        },
+                        ],
                       ),
                     ),
-                  ],
-                )
-              else
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: CircularProgressIndicator(),
-                ),
-              Card(
-                child: ListTile(
-                  title: const Text(
-                    'View music catalogue',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const CataloguePage(),
+                        ),
+                      );
+                    },
                   ),
-                  onTap: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const CataloguePage(),
-                      ),
-                    );
-                  },
                 ),
-              ),
-            ],
-          ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  child: InkWell(
+                    child: Card(
+                      color: appState.serviceColour,
+                      shadowColor: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Events and\nfundraising',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const EventsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  child: InkWell(
+                    child: Card(
+                      color: appState.serviceColour,
+                      shadowColor: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Truro\ntrip',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const EventsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
+
+        // SingleChildScrollView(
+        //   child: Column(
+        //     children: [
+        //       Image.asset('images/church.jpg', fit: BoxFit.cover),
+        //       if (!appState.initMusicSpinner)
+        //         Column(
+        //           children: [
+        //             if (appState.nextService == null)
+        //               const ListTile(
+        //                 title: Text(
+        //                   'Next service:',
+        //                   style: TextStyle(fontWeight: FontWeight.bold),
+        //                 ),
+        //                 subtitle: Text('No upcoming services'),
+        //               ),
+        //             if (appState.nextService != null)
+        //               ListTile(
+        //                 title: const Text(
+        //                   'Next service:',
+        //                   style: TextStyle(
+        //                     fontWeight: FontWeight.bold,
+        //                     fontSize: 18,
+        //                   ),
+        //                 ),
+        //                 subtitle: Text.rich(
+        //                   TextSpan(
+        //                     children: [
+        //                       TextSpan(
+        //                         text:
+        //                             '${Music.parseDate(appState.nextService!.date)} - ${appState.nextService!.serviceType}',
+        //                         style: const TextStyle(fontSize: 18),
+        //                       ),
+        //                       TextSpan(
+        //                         text:
+        //                             ' \nRehearsal - ${Music.formatTime(appState.nextService!.rehearsalTime)}\nService - ${Music.formatTime(appState.nextService!.time)}',
+        //                         style: const TextStyle(
+        //                           fontStyle: FontStyle.italic,
+        //                           fontSize: 16,
+        //                         ),
+        //                       ),
+        //                     ],
+        //                   ),
+        //                 ),
+        //                 onTap: () {
+        //                   appState.setCurrentService(appState.nextService!);
+        //                   Navigator.of(context).push(
+        //                     MaterialPageRoute(
+        //                       builder: (context) => const ServiceMusicPage(),
+        //                     ),
+        //                   );
+        //                 },
+        //               ),
+        //             if (appState.nextService != null)
+        //               Card(
+        //                 child: ListTile(
+        //                   title: const Text(
+        //                     'View next service',
+        //                     style: TextStyle(
+        //                       fontWeight: FontWeight.bold,
+        //                       fontSize: 18,
+        //                     ),
+        //                   ),
+        //                   onTap: () {
+        //                     appState.setCurrentService(appState.nextService!);
+        //                     Navigator.of(context).push(
+        //                       MaterialPageRoute(
+        //                         builder: (context) => const ServiceMusicPage(),
+        //                       ),
+        //                     );
+        //                   },
+        //                 ),
+        //               ),
+        //             if (appState.nextService != null)
+        //               Card(
+        //                 child: ListTile(
+        //                   title: const Text(
+        //                     'View upcoming services',
+        //                     style: TextStyle(
+        //                       fontWeight: FontWeight.bold,
+        //                       fontSize: 18,
+        //                     ),
+        //                   ),
+        //                   onTap: () async {
+        //                     Navigator.of(context).push(
+        //                       MaterialPageRoute(
+        //                         builder: (context) => const ServiceListPage(),
+        //                       ),
+        //                     );
+        //                   },
+        //                 ),
+        //               ),
+        //             Card(
+        //               child: ListTile(
+        //                 title: const Text(
+        //                   'View upcoming choir events and fundraising',
+        //                   style: TextStyle(
+        //                     fontWeight: FontWeight.bold,
+        //                     fontSize: 18,
+        //                   ),
+        //                 ),
+        //                 onTap: () async {
+        //                   // Fluttertoast.showToast(msg: 'Events');
+        //                   Navigator.of(context).push(
+        //                     MaterialPageRoute(
+        //                       builder: (context) => const EventsPage(),
+        //                     ),
+        //                   );
+        //                 },
+        //               ),
+        //             ),
+        //           ],
+        //         )
+        //       else
+        //         const Padding(
+        //           padding: EdgeInsets.all(16.0),
+        //           child: CircularProgressIndicator(),
+        //         ),
+        //       Card(
+        //         child: ListTile(
+        //           title: const Text(
+        //             'View music catalogue',
+        //             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        //           ),
+        //           onTap: () async {
+        //             Navigator.of(context).push(
+        //               MaterialPageRoute(
+        //                 builder: (context) => const CataloguePage(),
+        //               ),
+        //             );
+        //           },
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         UserManagementScreen(),
       ][currentPageIndex],
     );
