@@ -9,15 +9,18 @@ import 'package:holy_cross_music/models/app_user.dart';
 import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/service.dart';
+import 'package:holy_cross_music/themes/themes.dart';
 
 class ApplicationState extends ChangeNotifier {
   Color serviceColour;
+  Color onPrimaryColor;
   ApplicationState(
     this._profilePhotoPath,
     this._themeName,
     this._lightThemeData,
     this._darkThemeData,
-  ) : serviceColour = Service.serviceColor(_themeName, Brightness.dark) {
+  ) : serviceColour = Service.serviceColor(_themeName, Brightness.dark),
+      onPrimaryColor = serviceOnPrimaryColour(_themeName, Brightness.dark) {
     init();
   }
 

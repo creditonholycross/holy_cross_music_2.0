@@ -26,13 +26,11 @@ class _EventsPageState extends State<EventsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-        iconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
+        backgroundColor: appState.serviceColour,
+        iconTheme: IconThemeData(color: appState.onPrimaryColor),
         title: Text(
           ['Choir Events', 'Fundraising'][currentPageIndex],
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          style: TextStyle(color: appState.onPrimaryColor),
         ),
       ),
       bottomNavigationBar: NavigationBar(
@@ -44,23 +42,17 @@ class _EventsPageState extends State<EventsPage> {
         backgroundColor: appState.serviceColour,
         selectedIndex: currentPageIndex,
         labelTextStyle: WidgetStatePropertyAll(
-          TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          TextStyle(color: appState.onPrimaryColor),
         ),
         destinations: <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.event),
-            icon: Icon(
-              Icons.event,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+            icon: Icon(Icons.event, color: appState.onPrimaryColor),
             label: 'Events',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.savings),
-            icon: Icon(
-              Icons.savings_outlined,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+            icon: Icon(Icons.savings_outlined, color: appState.onPrimaryColor),
             label: 'Fundraising',
           ),
         ],
