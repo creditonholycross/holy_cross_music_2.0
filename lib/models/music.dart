@@ -1,4 +1,5 @@
 import 'package:holy_cross_music/database/database.dart';
+import 'package:holy_cross_music/models/fundraisingEvent.dart';
 import 'package:intl/intl.dart';
 
 class Music {
@@ -181,6 +182,9 @@ class Music {
   }
 
   static String parseDate(String date) {
+    if (FundraisingEvent.isWeekDay(date)) {
+      return '${date}s';
+    }
     final DateFormat dateFormatter = DateFormat('EEEE d MMMM');
     if (date.length != 8) date = '0$date';
     return dateFormatter.format(DateTime.parse(date));

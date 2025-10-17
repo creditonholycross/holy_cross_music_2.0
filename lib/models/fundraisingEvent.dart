@@ -1,20 +1,22 @@
 class FundraisingEvent {
-  final String date;
+  final String? date;
   final String organiser;
   final String time;
   final String? tickets;
   final String? ticketLink;
   final String location;
   final String event;
+  final String? day;
 
   const FundraisingEvent({
-    required this.date,
+    this.date,
     required this.organiser,
     required this.time,
     this.tickets,
     this.ticketLink,
     required this.location,
     required this.event,
+    this.day,
   });
 
   Map<String, Object?> toMap() {
@@ -25,6 +27,7 @@ class FundraisingEvent {
       'tickets': tickets,
       'ticketLink': ticketLink,
       'event': event,
+      'day': 'day',
     };
   }
 
@@ -37,10 +40,26 @@ class FundraisingEvent {
       ticketLink: dict['ticket link'],
       location: dict['location'],
       event: dict['event'],
+      day: dict['day'],
     );
   }
 
-  String getdateLength(String? date) {
+  static bool isWeekDay(String? date) {
+    return [
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
+      'sunday',
+    ].contains(date?.toLowerCase());
+  }
+
+  String getdateLength(String? date, String? day) {
+    if (isWeekDay(day)) {
+      return '0000-00';
+    }
     if (date == null || date == '' || date.length != 10) {
       return '3000-13';
     }
@@ -56,6 +75,6 @@ class FundraisingEvent {
   }
 
   String formatDate() {
-    return date.toUpperCase();
+    return date!.toUpperCase();
   }
 }
