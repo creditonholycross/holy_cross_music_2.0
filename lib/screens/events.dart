@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:holy_cross_music/app_state.dart';
+import 'package:holy_cross_music/helper/fetchEvents.dart';
+import 'package:holy_cross_music/helper/fetchFundraisingEvents.dart';
 import 'package:holy_cross_music/models/event.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
@@ -17,6 +19,27 @@ class EventsPage extends StatefulWidget {
 
 class _EventsPageState extends State<EventsPage> {
   int currentPageIndex = 0;
+
+  void asyncLoadData(BuildContext context) async {
+    if (context.read<ApplicationState>().eventList == null ||
+        context.read<ApplicationState>().fundraisingEventList == null) {
+      Map<String, List<MonthlyEvents>>? eventList = await fetchEvents();
+      Map<String, List<MonthlyFundraisingEvents>>? fundraisingEventList =
+          await fetchFundraisingEvents();
+      setState(() {
+        context.read<ApplicationState>().eventList = eventList;
+        context.read<ApplicationState>().fundraisingEventList =
+            fundraisingEventList;
+        context.read<ApplicationState>().initEventsSpinner = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    asyncLoadData(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +81,16 @@ class _EventsPageState extends State<EventsPage> {
         ],
       ),
       body: [
-        EventsWidget(events: events),
-        FundraisingWidget(fundraisingEvents: fundraisingEvents),
+        if (!appState.initEventsSpinner) EventsWidget(events: events),
+        if (!appState.initEventsSpinner)
+          FundraisingWidget(fundraisingEvents: fundraisingEvents),
+        if (appState.initEventsSpinner)
+          Center(
+            child: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: CircularProgressIndicator(),
+            ),
+          ),
       ][currentPageIndex],
     );
   }
