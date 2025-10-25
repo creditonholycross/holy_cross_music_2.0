@@ -121,10 +121,19 @@ class CreateServiceItem {
     String dateFormatted =
         '${service.date.substring(6)}/${service.date.substring(4, 6)}/${service.date.substring(0, 4)}';
 
+    String timeFormatted =
+        '${service.time.substring(0, 2)}:${service.time.substring(2, 4)}';
+
+    String rehearsalTimeFormatted = '';
+    if (service.rehearsalTime != '') {
+      rehearsalTimeFormatted =
+          '${service.rehearsalTime?.substring(0, 2)}:${service.rehearsalTime?.substring(2, 4)}';
+    }
+
     return CreateServiceItem(
       date: dateFormatted,
-      time: service.time,
-      rehearsalTime: service.rehearsalTime,
+      time: timeFormatted,
+      rehearsalTime: rehearsalTimeFormatted,
       serviceType: service.serviceType,
       music: service.music,
       organist: service.organist,

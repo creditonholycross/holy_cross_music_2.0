@@ -88,7 +88,9 @@ class MusicElementWidget extends StatelessWidget {
           music!.composer as String,
           style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
         ),
-        trailing: music!.link != '' ? PlayLinkWidget(music: music) : null,
+        trailing: music!.link != ''
+            ? PlayLinkWidget(musicLink: music?.link)
+            : null,
       );
     }
     if (music!.composer != '') {
@@ -99,7 +101,9 @@ class MusicElementWidget extends StatelessWidget {
           music!.composer as String,
           style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
         ),
-        trailing: music!.link != '' ? PlayLinkWidget(music: music) : null,
+        trailing: music!.link != ''
+            ? PlayLinkWidget(musicLink: music?.link)
+            : null,
       );
     }
 
@@ -228,9 +232,9 @@ class PsalmTitleFormatting extends StatelessWidget {
 }
 
 class PlayLinkWidget extends StatelessWidget {
-  const PlayLinkWidget({super.key, required this.music});
+  const PlayLinkWidget({super.key, required this.musicLink});
 
-  final Music? music;
+  final String? musicLink;
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +246,7 @@ class PlayLinkWidget extends StatelessWidget {
           action: SnackBarAction(
             label: 'Yes',
             onPressed: () async {
-              await launchUrl(Uri.parse(music!.link as String));
+              await launchUrl(Uri.parse(musicLink as String));
             },
           ),
         );

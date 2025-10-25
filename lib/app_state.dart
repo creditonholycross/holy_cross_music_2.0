@@ -55,6 +55,8 @@ class ApplicationState extends ChangeNotifier {
     } else {
       builtServices[index] = service;
     }
+
+    // todo: reorder list
     notifyListeners();
   }
 

@@ -239,40 +239,51 @@ class CreateMusicItem {
     this.id,
     required this.editing,
   });
+
+  factory CreateMusicItem.fromMusic(Music music) {
+    return CreateMusicItem(
+      editing: false,
+      musicType: music.musicType,
+      title: music.title,
+      composer: music.composer,
+      link: music.link,
+    );
+  }
 }
 
 class HymnItem {
   String? id;
-  String musicType = 'Hymn';
+  String musicType;
   String? number;
   String? title;
 
-  HymnItem({this.title, this.number, this.id});
+  HymnItem({required this.musicType, this.title, this.number, this.id});
 
   factory HymnItem.fromCreateMusicItem(CreateMusicItem createMusicItem) {
     if (createMusicItem.title == null) {
-      return HymnItem();
+      return HymnItem(musicType: createMusicItem.musicType);
     }
 
     List<String> titleSplit = createMusicItem.title?.split('#') as List<String>;
     return HymnItem(
       number: titleSplit[0],
       title: titleSplit.length == 2 ? titleSplit[1] : '',
+      musicType: createMusicItem.musicType,
     );
   }
 }
 
 class PsalmItem {
   String? id;
-  String musicType = 'Psalm';
+  String musicType;
   String? number;
   String? verses;
 
-  PsalmItem({this.number, this.verses, this.id});
+  PsalmItem({required this.musicType, this.number, this.verses, this.id});
 
   factory PsalmItem.fromCreateMusicItem(CreateMusicItem createMusicItem) {
     if (createMusicItem.title == null) {
-      return PsalmItem();
+      return PsalmItem(musicType: createMusicItem.musicType);
     }
 
     List<String> titleSplit =
@@ -280,6 +291,35 @@ class PsalmItem {
     return PsalmItem(
       number: titleSplit[0],
       verses: titleSplit.length == 2 ? 'v${titleSplit[1]}' : '',
+      musicType: createMusicItem.musicType,
+    );
+  }
+}
+
+class GenericMusicItem {
+  String? id;
+  String musicType;
+  String? title;
+  String? composer;
+
+  GenericMusicItem({
+    required this.musicType,
+    this.title,
+    this.composer,
+    this.id,
+  });
+
+  factory GenericMusicItem.fromCreateMusicItem(
+    CreateMusicItem createMusicItem,
+  ) {
+    if (createMusicItem.title == null) {
+      return GenericMusicItem(musicType: createMusicItem.musicType);
+    }
+
+    return GenericMusicItem(
+      title: createMusicItem.title,
+      composer: createMusicItem.composer,
+      musicType: createMusicItem.musicType,
     );
   }
 }
