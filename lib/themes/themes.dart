@@ -336,3 +336,11 @@ void getThemeName() async {
   var prefs = await SharedPreferences.getInstance();
   prefs.getString('themeName') ?? 'base';
 }
+
+Color serviceOnPrimaryColour(String theme, Brightness brightness) {
+  if (brightness == Brightness.light) {
+    return GlobalThemeData.themeLightMap[theme]!.colorScheme.onPrimary;
+  } else {
+    return GlobalThemeData.themeDarkMap[theme]!.colorScheme.onPrimary;
+  }
+}

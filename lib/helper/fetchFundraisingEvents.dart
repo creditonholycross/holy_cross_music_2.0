@@ -70,13 +70,16 @@ Map<String, List<MonthlyFundraisingEvents>> groupEventsByMonth(
   var monthlyList = <MonthlyFundraisingEvents>[];
 
   var filteredList = eventList.where((item) {
-    var startDatetime = DateTime.parse(item.date);
+    if (item.date == null || item.day != null) {
+      return true;
+    }
+    var startDatetime = DateTime.parse(item.date as String);
     return startDatetime.compareTo(DateTime.now()) > 0;
   });
 
   var serviceMap = groupBy(
     filteredList,
-    (item) => item.getdateLength(item.date),
+    (item) => item.getdateLength(item.date, item.day),
   );
 
   serviceMap.forEach(

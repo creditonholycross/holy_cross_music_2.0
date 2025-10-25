@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/models/event.dart';
 import 'package:holy_cross_music/models/month.dart';
@@ -25,13 +26,11 @@ class _EventsPageState extends State<EventsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.tertiary,
-        iconTheme: IconThemeData(
-          color: Theme.of(context).colorScheme.onPrimary,
-        ),
+        backgroundColor: appState.serviceColour,
+        iconTheme: IconThemeData(color: appState.onPrimaryColor),
         title: Text(
           ['Choir Events', 'Fundraising'][currentPageIndex],
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          style: TextStyle(color: appState.onPrimaryColor),
         ),
       ),
       bottomNavigationBar: NavigationBar(
@@ -43,23 +42,17 @@ class _EventsPageState extends State<EventsPage> {
         backgroundColor: appState.serviceColour,
         selectedIndex: currentPageIndex,
         labelTextStyle: WidgetStatePropertyAll(
-          TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          TextStyle(color: appState.onPrimaryColor),
         ),
         destinations: <Widget>[
           NavigationDestination(
             selectedIcon: Icon(Icons.event),
-            icon: Icon(
-              Icons.event,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+            icon: Icon(Icons.event, color: appState.onPrimaryColor),
             label: 'Events',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.savings),
-            icon: Icon(
-              Icons.savings_outlined,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+            icon: Icon(Icons.savings_outlined, color: appState.onPrimaryColor),
             label: 'Fundraising',
           ),
         ],
@@ -238,6 +231,8 @@ class FundraisingWidget extends StatelessWidget {
   const FundraisingWidget({super.key, required this.fundraisingEvents});
 
   final Map<String, List<MonthlyFundraisingEvents>>? fundraisingEvents;
+  final String justgivingLink =
+      'https://www.justgiving.com/crowdfunding/junior-choristers';
 
   @override
   Widget build(BuildContext context) {
@@ -247,6 +242,64 @@ class FundraisingWidget extends StatelessWidget {
           if (fundraisingEvents!.isNotEmpty) {
             return Column(
               children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          right: 12,
+                          left: 16,
+                          bottom: 12,
+                        ),
+                        child: Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    'Junior choristers\' JustGiving page (long tap link to copy):\n',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              WidgetSpan(
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    await launchUrl(Uri.parse(justgivingLink));
+                                  },
+                                  onLongPress: () {
+                                    Clipboard.setData(
+                                      ClipboardData(text: justgivingLink),
+                                    ).then((_) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Link copied to clipboard',
+                                          ),
+                                        ),
+                                      );
+                                    });
+                                  },
+                                  child: Text(
+                                    justgivingLink,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.blue,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
@@ -259,21 +312,23 @@ class FundraisingWidget extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  year,
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
+                            if (year != '0000' && year != '3000')
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    year,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
+
                         ListView.builder(
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -285,19 +340,22 @@ class FundraisingWidget extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 8),
-                                        child: Text(
-                                          month,
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
+                                    if (month != 'Recurring')
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 8,
+                                          ),
+                                          child: Text(
+                                            month,
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 20,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
                                   ],
                                 ),
                                 ListView.builder(
@@ -308,6 +366,7 @@ class FundraisingWidget extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     var event = yearEvents![i].events;
                                     var date = event[index].date;
+                                    var day = event[index].day;
                                     var organiser = event[index].organiser;
                                     var eventTime = event[index].time;
                                     var tickets = event[index].tickets;
@@ -318,15 +377,24 @@ class FundraisingWidget extends StatelessWidget {
                                       title: Text.rich(
                                         TextSpan(
                                           children: [
-                                            TextSpan(
-                                              text: Music.parseDate(
-                                                date,
-                                              ).toUpperCase(),
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 18,
+                                            if (date != '' && date != null)
+                                              TextSpan(
+                                                text: Music.parseDate(
+                                                  date,
+                                                ).toUpperCase(),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
                                               ),
-                                            ),
+                                            if (day != null && date == '')
+                                              TextSpan(
+                                                text: '${day}s'.toUpperCase(),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
                                             TextSpan(
                                               text: '\nOrganiser - $organiser',
                                               style: const TextStyle(

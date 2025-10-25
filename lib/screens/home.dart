@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     await updateMusicDb();
 
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList();
-    Service? nextService = serviceList!.first.services.firstOrNull;
+    Service? nextService = serviceList?.first.services.firstOrNull;
     String serviceColour = nextService?.colour ?? 'base';
     Map<String, List<MonthlyEvents>>? eventList = await fetchEvents();
     Map<String, List<MonthlyFundraisingEvents>>? fundraisingEventList =
@@ -51,6 +51,10 @@ class _HomeScreenState extends State<HomeScreen> {
           fundraisingEventList;
       context.read<ApplicationState>().initMusicSpinner = false;
       context.read<ApplicationState>().serviceColour = Service.serviceColor(
+        serviceColour,
+        Brightness.dark,
+      );
+      context.read<ApplicationState>().onPrimaryColor = serviceOnPrimaryColour(
         serviceColour,
         Brightness.dark,
       );
@@ -87,11 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
             'Manage Users',
             'Build-a-service',
           ][currentPageIndex],
-          style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+          style: TextStyle(color: appState.onPrimaryColor),
         ),
         leading: currentPageIndex != 0
             ? BackButton(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: appState.onPrimaryColor,
                 onPressed: () {
                   setState(() {
                     currentPageIndex = 0;
@@ -101,19 +105,13 @@ class _HomeScreenState extends State<HomeScreen> {
             : null,
         actions: [
           IconButton(
-            icon: Icon(
-              Icons.refresh,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+            icon: Icon(Icons.refresh, color: appState.onPrimaryColor),
             onPressed: () async {
               Fluttertoast.showToast(msg: 'Updating');
             },
           ),
           IconButton(
-            icon: Icon(
-              Icons.person,
-              color: Theme.of(context).colorScheme.onPrimary,
-            ),
+            icon: Icon(Icons.person, color: appState.onPrimaryColor),
             onPressed: () {
               Navigator.push(
                 context,
@@ -137,14 +135,14 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: appState.serviceColour,
               selectedIndex: currentPageIndex,
               labelTextStyle: WidgetStatePropertyAll(
-                TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                TextStyle(color: appState.onPrimaryColor),
               ),
               destinations: <Widget>[
                 NavigationDestination(
                   selectedIcon: Icon(Icons.home),
                   icon: Icon(
                     Icons.home_outlined,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: appState.onPrimaryColor,
                   ),
                   label: 'Home',
                 ),
@@ -152,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   selectedIcon: Icon(Icons.manage_accounts),
                   icon: Icon(
                     Icons.manage_accounts,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: appState.onPrimaryColor,
                   ),
                   label: 'Manage Users',
                 ),
