@@ -49,9 +49,13 @@ class _ServiceBuilderScreenState extends State<ServiceBuilderScreen> {
         ),
         initialValue: selectedItem,
         onSelected: (ServiceTemplate item) {
+          appState.setNewBuildService();
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => CreateServiceScreen(templateName: item),
+              builder: (context) => CreateServiceScreen(
+                templateName: item,
+                serviceIndex: serviceList.length,
+              ),
             ),
           );
         },
@@ -102,13 +106,15 @@ class _ServiceBuilderScreenState extends State<ServiceBuilderScreen> {
                         isThreeLine: true,
                         onTap: () {
                           appState.setCurrentBuildService(service);
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => CreateServiceScreen(
-                          //       serviceName: service.serviceType,
-                          //     ),
-                          //   ),
-                          // );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => CreateServiceScreen(
+                                templateName:
+                                    service.serviceTemplate as ServiceTemplate,
+                                serviceIndex: index,
+                              ),
+                            ),
+                          );
                         },
                       );
                     },

@@ -44,8 +44,17 @@ class ApplicationState extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addBuiltService(Service service) {
-    builtServices.add(service);
+  void setNewBuildService() {
+    currentBuildService = null;
+    notifyListeners();
+  }
+
+  void addBuiltService(Service service, int index) {
+    if (builtServices.length <= index) {
+      builtServices.add(service);
+    } else {
+      builtServices[index] = service;
+    }
     notifyListeners();
   }
 

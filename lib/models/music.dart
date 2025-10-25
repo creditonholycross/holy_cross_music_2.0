@@ -206,7 +206,7 @@ class Music {
       return '${date}s';
     }
     final DateFormat dateFormatter = DateFormat('EEEE d MMMM');
-    if (date.length != 8) date = '0$date';
+    if (date.length < 8) date = '0$date';
     return dateFormatter.format(DateTime.parse(date));
   }
 

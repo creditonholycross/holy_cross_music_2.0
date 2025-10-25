@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
-import 'package:holy_cross_music/screens/build_services.dart';
 import 'package:holy_cross_music/screens/widgets.dart';
 import 'package:holy_cross_music/utils/string_extension.dart';
+import 'package:intl/intl.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:provider/provider.dart';
 
 enum TemplateItem {
@@ -37,9 +38,14 @@ List<PopupMenuItem<TemplateItem>> evensongItems = [
 ];
 
 class CreateServiceScreen extends StatefulWidget {
-  const CreateServiceScreen({super.key, required this.templateName});
+  const CreateServiceScreen({
+    super.key,
+    required this.templateName,
+    required this.serviceIndex,
+  });
 
   final ServiceTemplate templateName;
+  final int serviceIndex;
 
   @override
   State<CreateServiceScreen> createState() => _CreateServiceScreenState();
@@ -65,18 +71,22 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   }
 
   Service createService(
-    String serviceTitle,
+    String? serviceTitle,
     String serviceDate,
     String serviceTime,
     String? rehearsalTime,
     String? organist,
     ServiceTemplate serviceTemplate,
   ) {
+    if (serviceTitle == '') {
+      serviceTitle = serviceTemplate.name.capitalize();
+    }
+
     List<Music> serviceMusic = _musicItems
         .map(
           (e) => Music.fromCreateMusicItem(
             e,
-            serviceTitle,
+            serviceTitle as String,
             serviceDate,
             serviceTime,
             rehearsalTime,
@@ -91,6 +101,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   Map<ServiceTemplate, dynamic> serviceTypeMap = {
     ServiceTemplate.evensong: evensongItems,
   };
+
+  var dateMaskFormatter = MaskTextInputFormatter(
+    mask: '##/##/####',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.lazy,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -113,11 +129,16 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     final _formKey = GlobalKey<FormState>();
     final _cardFormKey = GlobalKey<FormState>();
 
-    String serviceTitle = '';
-    String serviceDate = '';
-    String serviceTime = '';
-    String? rehearsalTime;
-    String? organist;
+    CreateServiceItem serviceItem = CreateServiceItem.fromService(
+      appState.currentBuildService,
+      widget.templateName,
+    );
+
+    // String serviceTitle = '';
+    // String serviceDate = '';
+    // String serviceTime = '';
+    // String? rehearsalTime;
+    // String? organist;
     ServiceTemplate serviceTemplate = widget.templateName;
 
     return Scaffold(
@@ -183,15 +204,18 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                           _formKey.currentState!.save();
                           _formKey.currentState!.reset();
                           Service service = createService(
-                            serviceTitle,
-                            serviceDate,
-                            serviceTime,
-                            rehearsalTime,
-                            organist,
+                            serviceItem.serviceType,
+                            serviceItem.date as String,
+                            serviceItem.time as String,
+                            serviceItem.rehearsalTime,
+                            serviceItem.organist,
                             serviceTemplate,
                           );
                           setState(() {
-                            appState.addBuiltService(service);
+                            appState.addBuiltService(
+                              service,
+                              widget.serviceIndex,
+                            );
                           });
                           Navigator.of(context).pop();
                         }
@@ -226,11 +250,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         ),
                         labelText: 'Service Title',
                       ),
+                      initialValue: serviceItem.serviceType,
                       validator: (value) {
                         return null;
                       },
                       onSaved: (value) {
-                        serviceTitle = value!;
+                        serviceItem.serviceType = value!;
                       },
                     ),
                   ),
@@ -240,6 +265,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                       horizontal: 16.0,
                     ),
                     child: TextFormField(
+                      inputFormatters: [dateMaskFormatter],
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -253,11 +279,22 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         hintText: 'dd/mm/yyyy',
                       ),
                       keyboardType: TextInputType.datetime,
+                      initialValue: serviceItem.date,
                       validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a date.';
+                        }
+                        try {
+                          DateFormat('dd/MM/yyyy').parseStrict(value);
+                        } catch (e) {
+                          return 'Please enter a valid date.';
+                        }
                         return null;
                       },
                       onSaved: (value) {
-                        serviceTime = value!;
+                        var dateSplit = value?.split('/');
+                        serviceItem.date =
+                            '${dateSplit?[2]}${dateSplit?[1]}${dateSplit?[0]}';
                       },
                     ),
                   ),
@@ -280,11 +317,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                       ),
                       keyboardType: TextInputType.datetime,
                       inputFormatters: [],
+                      initialValue: serviceItem.time,
                       validator: (value) {
                         return null;
                       },
                       onSaved: (value) {
-                        serviceTime = value!;
+                        serviceItem.time = value!;
                       },
                     ),
                   ),
@@ -305,11 +343,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         ),
                         labelText: 'Rehearsal Time',
                       ),
+                      initialValue: serviceItem.rehearsalTime,
                       validator: (value) {
                         return null;
                       },
                       onSaved: (value) {
-                        rehearsalTime = value!;
+                        serviceItem.rehearsalTime = value!;
                       },
                     ),
                   ),
@@ -330,11 +369,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         ),
                         labelText: 'Organist',
                       ),
+                      initialValue: serviceItem.organist,
                       validator: (value) {
                         return null;
                       },
                       onSaved: (value) {
-                        organist = value!;
+                        serviceItem.organist = value!;
                       },
                     ),
                   ),

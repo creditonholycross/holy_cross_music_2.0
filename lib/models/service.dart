@@ -12,7 +12,7 @@ class Service {
   final List<Music> music;
   final String? organist;
   final String colour;
-  final String? serviceTemplate;
+  final ServiceTemplate? serviceTemplate;
 
   const Service({
     required this.date,
@@ -58,7 +58,7 @@ class Service {
       music: music,
       organist: organists.join(', '),
       colour: colour,
-      serviceTemplate: serviceTemplate?.name,
+      serviceTemplate: serviceTemplate,
     );
   }
 
@@ -84,5 +84,53 @@ class Service {
     } else {
       return GlobalThemeData.themeDarkMap[colour]!.colorScheme.onPrimary;
     }
+  }
+}
+
+class CreateServiceItem {
+  String? date;
+  String? time;
+  String? rehearsalTime;
+  String? serviceType;
+  List<Music>? music;
+  String? organist;
+  String? colour;
+  ServiceTemplate serviceTemplate;
+  bool editing;
+
+  CreateServiceItem({
+    this.date,
+    this.time,
+    this.rehearsalTime,
+    this.serviceType,
+    this.music,
+    this.organist,
+    this.colour,
+    required this.serviceTemplate,
+    required this.editing,
+  });
+
+  factory CreateServiceItem.fromService(
+    Service? service,
+    ServiceTemplate serviceTemplate,
+  ) {
+    if (service == null) {
+      return CreateServiceItem(serviceTemplate: serviceTemplate, editing: true);
+    }
+
+    String dateFormatted =
+        '${service.date.substring(6)}/${service.date.substring(4, 6)}/${service.date.substring(0, 4)}';
+
+    return CreateServiceItem(
+      date: dateFormatted,
+      time: service.time,
+      rehearsalTime: service.rehearsalTime,
+      serviceType: service.serviceType,
+      music: service.music,
+      organist: service.organist,
+      colour: service.colour,
+      serviceTemplate: service.serviceTemplate as ServiceTemplate,
+      editing: true,
+    );
   }
 }
