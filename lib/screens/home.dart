@@ -16,6 +16,7 @@ import 'package:holy_cross_music/screens/events.dart';
 import 'package:holy_cross_music/screens/profile.dart';
 import 'package:holy_cross_music/screens/service_list.dart';
 import 'package:holy_cross_music/screens/service_music.dart';
+import 'package:holy_cross_music/screens/truro.dart';
 import 'package:holy_cross_music/screens/user_management.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/themes/themes.dart';
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       context.read<ApplicationState>().serviceList = serviceList;
+      context.read<ApplicationState>().truroMusic = serviceList;
       context.read<ApplicationState>().nextService = nextService;
       context.read<ApplicationState>().initMusicSpinner = false;
       context.read<ApplicationState>().serviceColour = Service.serviceColor(
@@ -331,37 +333,41 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: InkWell(
-                      child: Card(
-                        color: appState.serviceColour,
-                        shadowColor: Colors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Truro',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: appState.onPrimaryColor,
+                  if (['admin', 'superadmin'].contains(appState.userLevel))
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: InkWell(
+                        child: Card(
+                          color: appState.serviceColour,
+                          shadowColor: Colors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Truro',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: appState.onPrimaryColor,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const EventsPage(),
+                            ],
                           ),
-                        );
-                      },
+                        ),
+                        onTap: () {
+                          if (appState.truroMusic == null) {
+                            appState.initTruroSpinner = true;
+                          }
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const TruroPage(),
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
                 ],
               ),
             if (appState.initMusicSpinner)
