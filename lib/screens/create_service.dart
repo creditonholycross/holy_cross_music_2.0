@@ -102,7 +102,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   ];
   TemplateItem? selectedItem;
   int editStateIndex = -1;
-  late CreateServiceItem serviceItem;
+  CreateServiceItem? serviceItem;
 
   void _setEditStateIndex(int newValue) {
     setState(() {
@@ -124,32 +124,40 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     });
   }
 
+  void _updateServiceItem(CreateServiceItem? createServiceItem) {
+    setState(() {
+      serviceItem = createServiceItem;
+    });
+  }
+
   Service createService(
-    String? serviceTitle,
-    String serviceDate,
-    String serviceTime,
-    String? rehearsalTime,
-    String? organist,
+    CreateServiceItem? serviceItem,
     ServiceTemplate serviceTemplate,
   ) {
-    if (serviceTitle == '') {
-      serviceTitle = serviceTemplate.name.replaceAll('_', ' ').capitalizeAll();
+    if (serviceItem?.serviceType == null || serviceItem?.serviceType == '') {
+      serviceItem?.serviceType = serviceTemplate.name
+          .replaceAll('_', ' ')
+          .capitalizeAll();
     }
 
     List<Music> serviceMusic = _musicItems
         .map(
           (e) => Music.fromCreateMusicItem(
             e,
-            serviceTitle as String,
-            serviceDate,
-            serviceTime,
-            rehearsalTime,
-            organist,
+            serviceItem?.serviceType as String,
+            serviceItem?.date as String,
+            serviceItem?.time as String,
+            serviceItem?.rehearsalTime,
+            serviceItem?.organist,
           ),
         )
         .toList();
 
-    return Service.createService(serviceDate, serviceMusic, serviceTemplate);
+    return Service.createTemplateService(
+      serviceItem,
+      serviceMusic,
+      serviceTemplate,
+    );
   }
 
   Map<ServiceTemplate, dynamic> serviceTypeMap = {
@@ -189,15 +197,23 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     });
 
     final _formKey = GlobalKey<FormState>();
+    final _titleFormKey = GlobalKey<FormState>();
+    final _dateFormKey = GlobalKey<FormState>();
+    final _timeFormKey = GlobalKey<FormState>();
+    final _reheasalTimeFormKey = GlobalKey<FormState>();
+    final _organistFormKey = GlobalKey<FormState>();
+    final _colourFormKey = GlobalKey<FormState>();
     final _cardFormKey = GlobalKey<FormState>();
 
-    serviceItem = CreateServiceItem.fromService(
-      appState.currentBuildService,
-      widget.templateName,
-    );
+    if (serviceItem == null) {
+      serviceItem = CreateServiceItem.fromService(
+        appState.currentBuildService,
+        widget.templateName,
+      );
+    }
 
-    if (serviceItem.music != null) {
-      _setExistingMusicItems(serviceItem.music as List<Music>);
+    if (serviceItem?.music != null) {
+      _setExistingMusicItems(serviceItem?.music as List<Music>);
     }
 
     ServiceTemplate serviceTemplate = widget.templateName;
@@ -282,11 +298,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                               _formKey.currentState!.save();
                               _formKey.currentState!.reset();
                               Service service = createService(
-                                serviceItem.serviceType,
-                                serviceItem.date as String,
-                                serviceItem.time as String,
-                                serviceItem.rehearsalTime,
-                                serviceItem.organist,
+                                serviceItem,
                                 serviceTemplate,
                               );
                               setState(() {
@@ -311,205 +323,379 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                Form(
+                  key: _titleFormKey,
+                  child: Column(
+                    children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8.0,
                           horizontal: 16.0,
                         ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                            labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            labelText: 'Service Title',
-                          ),
-                          initialValue: serviceItem.serviceType,
-                          validator: (value) {
-                            return null;
-                          },
-                          // onEditingComplete: () {
-                          //   _formKey.currentState!._fields
-                          // },
-                          onSaved: (value) {
-                            setState(() {
-                              serviceItem.serviceType = value!;
-                            });
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16.0,
-                        ),
-                        child: TextFormField(
-                          inputFormatters: [dateMaskFormatter],
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                            labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            labelText: 'Service Date *',
-                            hintText: 'dd/mm/yyyy',
-                          ),
-                          keyboardType: TextInputType.datetime,
-                          initialValue: serviceItem.date,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a date.';
-                            }
-                            try {
-                              DateFormat('dd/MM/yyyy').parseStrict(value);
-                            } catch (e) {
-                              return 'Please enter a valid date.';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            var dateSplit = value?.split('/');
-                            serviceItem.date =
-                                '${dateSplit?[2]}${dateSplit?[1]}${dateSplit?[0]}';
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16.0,
-                        ),
-                        child: TextFormField(
-                          inputFormatters: [timeMaskFormatter],
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                            labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            labelText: 'Service Time *',
-                            hintText: 'hh:mm',
-                          ),
-                          keyboardType: TextInputType.datetime,
-                          initialValue: serviceItem.time,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter a time.';
-                            }
-                            try {
-                              DateFormat('hh:mm').parseStrict(value);
-                            } catch (e) {
-                              return 'Please enter a valid time.';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            serviceItem.time =
-                                '${value?.replaceAll(':', '')}00';
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16.0,
-                        ),
-                        child: TextFormField(
-                          inputFormatters: [timeMaskFormatter],
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
-                              ),
-                            ),
-                            labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            labelText: 'Rehearsal Time',
-                            hintText: 'hh:mm',
-                          ),
-                          keyboardType: TextInputType.datetime,
-                          initialValue: serviceItem.rehearsalTime,
-                          validator: (value) {
-                            if (value != null && value != '') {
-                              try {
-                                DateFormat('hh:mm').parseStrict(value);
-                              } catch (e) {
-                                return 'Please enter a valid time.';
+                        child: FocusScope(
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus == false) {
+                                if (_titleFormKey.currentState!.validate()) {
+                                  _titleFormKey.currentState!.save();
+                                }
                               }
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            if (value != null && value != '') {
-                              serviceItem.rehearsalTime =
-                                  '${value.replaceAll(':', '')}00';
-                            } else {
-                              serviceItem.rehearsalTime = '';
-                            }
-                          },
+                            },
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                                labelText: 'Service Name',
+                              ),
+                              initialValue: serviceItem?.serviceType,
+                              validator: (value) {
+                                return null;
+                              },
+                              onSaved: (value) {
+                                serviceItem?.serviceType = value!;
+                                _updateServiceItem(serviceItem);
+                              },
+                            ),
+                          ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                Form(
+                  key: _dateFormKey,
+                  child: Column(
+                    children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8.0,
                           horizontal: 16.0,
                         ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                        child: FocusScope(
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus == false) {
+                                if (_dateFormKey.currentState!.validate()) {
+                                  _dateFormKey.currentState!.save();
+                                }
+                              }
+                            },
+                            child: TextFormField(
+                              inputFormatters: [dateMaskFormatter],
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                                labelText: 'Service Date *',
+                                hintText: 'dd/mm/yyyy',
                               ),
+                              keyboardType: TextInputType.datetime,
+                              initialValue: serviceItem?.formatDate(),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter a date.';
+                                }
+                                try {
+                                  DateFormat('dd/MM/yyyy').parseStrict(value);
+                                } catch (e) {
+                                  return 'Please enter a valid date.';
+                                }
+                                return null;
+                              },
+                              onFieldSubmitted: (event) {
+                                if (_dateFormKey.currentState!.validate()) {
+                                  _dateFormKey.currentState!.save();
+                                }
+                              },
+                              onEditingComplete: () {
+                                if (_dateFormKey.currentState!.validate()) {
+                                  _dateFormKey.currentState!.save();
+                                }
+                              },
+                              onSaved: (value) {
+                                var dateSplit = value?.split('/');
+                                serviceItem?.date =
+                                    '${dateSplit?[2]}${dateSplit?[1]}${dateSplit?[0]}';
+                                _updateServiceItem(serviceItem);
+                              },
                             ),
-                            labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            labelText: 'Organist',
                           ),
-                          initialValue: serviceItem.organist,
-                          validator: (value) {
-                            return null;
-                          },
-                          onSaved: (value) {
-                            serviceItem.organist = value!;
-                          },
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                Form(
+                  key: _timeFormKey,
+                  child: Column(
+                    children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           vertical: 8.0,
                           horizontal: 16.0,
                         ),
-                        child: TextFormField(
-                          decoration: InputDecoration(
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.onPrimary,
+                        child: FocusScope(
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus == false) {
+                                if (_timeFormKey.currentState!.validate()) {
+                                  _timeFormKey.currentState!.save();
+                                }
+                              }
+                            },
+                            child: TextFormField(
+                              inputFormatters: [timeMaskFormatter],
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                                labelText: 'Service Time *',
+                                hintText: 'hh:mm',
                               ),
+                              keyboardType: TextInputType.datetime,
+                              initialValue: serviceItem?.formatTime(),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter a time.';
+                                }
+                                try {
+                                  DateFormat('hh:mm').parseStrict(value);
+                                } catch (e) {
+                                  return 'Please enter a valid time.';
+                                }
+                                return null;
+                              },
+                              onEditingComplete: () {
+                                if (_timeFormKey.currentState!.validate()) {
+                                  _timeFormKey.currentState!.save();
+                                }
+                              },
+                              onSaved: (value) {
+                                serviceItem?.time =
+                                    '${value?.replaceAll(':', '')}00';
+                                _updateServiceItem(serviceItem);
+                              },
                             ),
-                            labelStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                            ),
-                            labelText: 'Service Colour',
                           ),
-                          initialValue: serviceItem.organist,
-                          validator: (value) {
-                            return null;
-                          },
-                          onSaved: (value) {
-                            serviceItem.colour = value!;
-                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Form(
+                  key: _reheasalTimeFormKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16.0,
+                        ),
+                        child: FocusScope(
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus == false) {
+                                if (_reheasalTimeFormKey.currentState!
+                                    .validate()) {
+                                  _reheasalTimeFormKey.currentState!.save();
+                                }
+                              }
+                            },
+                            child: TextFormField(
+                              inputFormatters: [timeMaskFormatter],
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                                labelText: 'Rehearsal Time',
+                                hintText: 'hh:mm',
+                              ),
+                              keyboardType: TextInputType.datetime,
+                              initialValue: serviceItem?.formatRehearsalTime(),
+                              validator: (value) {
+                                if (value != null && value != '') {
+                                  try {
+                                    DateFormat('hh:mm').parseStrict(value);
+                                  } catch (e) {
+                                    return 'Please enter a valid time.';
+                                  }
+                                }
+                                return null;
+                              },
+                              onEditingComplete: () {
+                                if (_reheasalTimeFormKey.currentState!
+                                    .validate()) {
+                                  _reheasalTimeFormKey.currentState!.save();
+                                }
+                              },
+                              onSaved: (value) {
+                                if (value != null && value != '') {
+                                  serviceItem?.rehearsalTime =
+                                      '${value.replaceAll(':', '')}00';
+                                } else {
+                                  serviceItem?.rehearsalTime = null;
+                                }
+                                _updateServiceItem(serviceItem);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Form(
+                  key: _organistFormKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16.0,
+                        ),
+                        child: FocusScope(
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus == false) {
+                                if (_organistFormKey.currentState!.validate()) {
+                                  _organistFormKey.currentState!.save();
+                                }
+                              }
+                            },
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                                labelText: 'Organist',
+                              ),
+                              initialValue: serviceItem?.organist,
+                              validator: (value) {
+                                return null;
+                              },
+                              onEditingComplete: () {
+                                if (_organistFormKey.currentState!.validate()) {
+                                  _organistFormKey.currentState!.save();
+                                }
+                              },
+                              onSaved: (value) {
+                                if (value != null && value != '') {
+                                  serviceItem?.organist = value;
+                                } else {
+                                  serviceItem?.organist = null;
+                                }
+                                serviceItem?.organist = value!;
+                                _updateServiceItem(serviceItem);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Form(
+                  key: _colourFormKey,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8.0,
+                          horizontal: 16.0,
+                        ),
+                        child: FocusScope(
+                          child: Focus(
+                            onFocusChange: (hasFocus) {
+                              if (hasFocus == false) {
+                                if (_colourFormKey.currentState!.validate()) {
+                                  _colourFormKey.currentState!.save();
+                                }
+                              }
+                            },
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimary,
+                                  ),
+                                ),
+                                labelStyle: TextStyle(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
+                                ),
+                                labelText: 'Service Colour',
+                              ),
+                              initialValue: serviceItem?.colour,
+                              validator: (value) {
+                                return null;
+                              },
+                              onEditingComplete: () {
+                                if (_colourFormKey.currentState!.validate()) {
+                                  _colourFormKey.currentState!.save();
+                                }
+                              },
+                              onSaved: (value) {
+                                if (value != null && value != '') {
+                                  serviceItem?.colour = value;
+                                } else {
+                                  serviceItem?.colour = null;
+                                }
+                                _updateServiceItem(serviceItem);
+                              },
+                            ),
+                          ),
                         ),
                       ),
                       Padding(

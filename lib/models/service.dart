@@ -62,6 +62,28 @@ class Service {
     );
   }
 
+  factory Service.createTemplateService(
+    CreateServiceItem? serviceItem,
+    List<Music> music, [
+    ServiceTemplate? serviceTemplate,
+  ]) {
+    var colour = 'base';
+    if (serviceItem?.colour != null && serviceItem?.colour != '') {
+      colour = serviceItem?.colour as String;
+    }
+
+    return Service(
+      date: serviceItem?.date as String,
+      time: serviceItem?.time as String,
+      rehearsalTime: serviceItem?.rehearsalTime,
+      serviceType: serviceItem?.serviceType as String,
+      music: music,
+      organist: serviceItem?.organist,
+      colour: colour,
+      serviceTemplate: serviceTemplate,
+    );
+  }
+
   static Color serviceColor(String theme, Brightness brightness) {
     if (brightness == Brightness.light) {
       return GlobalThemeData.themeLightMap[theme]!.colorScheme.tertiary;
@@ -141,5 +163,23 @@ class CreateServiceItem {
       serviceTemplate: service.serviceTemplate as ServiceTemplate,
       editing: true,
     );
+  }
+
+  formatDate() {
+    if (date == null) return '';
+    if (date!.contains('/')) return date;
+    return '${date?.substring(6)}/${date?.substring(4, 6)}/${date?.substring(0, 4)}';
+  }
+
+  formatTime() {
+    if (time == null) return '';
+    if (time!.contains(':')) return time;
+    return '${time?.substring(0, 2)}:${time?.substring(2, 4)}';
+  }
+
+  formatRehearsalTime() {
+    if (rehearsalTime == null) return '';
+    if (rehearsalTime!.contains(':')) return rehearsalTime;
+    return '${rehearsalTime?.substring(0, 2)}:${rehearsalTime?.substring(2, 4)}';
   }
 }
