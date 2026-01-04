@@ -15,7 +15,9 @@ fetchFundraisingEvents() async {
   http.Response response;
 
   try {
-    response = await http.get((Uri.parse(eventsLink)));
+    response = await http
+        .get((Uri.parse(eventsLink)))
+        .timeout(Duration(seconds: 5));
   } catch (e) {
     print(e);
     if (!kIsWeb) {

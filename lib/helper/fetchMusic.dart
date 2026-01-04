@@ -42,7 +42,7 @@ Future<void> updateMusicDb({isAdmin = false}) async {
   try {
     response = await http
         .get((Uri.parse(musicURI)))
-        .timeout(const Duration(seconds: 5));
+        .timeout(const Duration(seconds: 3));
   } on TimeoutException {
     if (!kIsWeb) {
       Fluttertoast.showToast(
