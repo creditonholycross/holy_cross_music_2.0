@@ -1,5 +1,6 @@
 import 'package:holy_cross_music/database/database.dart';
 import 'package:holy_cross_music/models/fundraisingEvent.dart';
+import 'package:holy_cross_music/screens/home.dart';
 import 'package:intl/intl.dart';
 
 class Music {
@@ -53,7 +54,7 @@ class Music {
           composer: composer,
           link: link,
           serviceOrganist: serviceOrganist,
-          colour: colour,
+          colour: colour?.toLowerCase(),
         ),
       _ => throw const FormatException('Failed to load music from csv.'),
     };
@@ -166,6 +167,19 @@ class Music {
   }
 
   Map<String, Object?> toMap() {
+    if (date == '') {
+      throw AdminException(
+        'Date is missing for $serviceType $musicType $title',
+      );
+    } else if (time == '') {
+      throw AdminException(
+        'Time is missing for $serviceType $musicType $title',
+      );
+    } else if (serviceType == '') {
+      throw AdminException(
+        'Service name is missing for $date $musicType $title',
+      );
+    }
     return {
       'id': '$date$serviceType$musicType$title',
       'service_date': date,

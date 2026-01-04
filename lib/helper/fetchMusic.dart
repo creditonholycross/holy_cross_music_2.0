@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:csv/csv.dart';
 import 'package:holy_cross_music/database/database.dart';
 import 'package:holy_cross_music/database/db_functions.dart';
@@ -25,7 +27,7 @@ Future<Service?> fetchMusic() async {
   // return await DbFunctions().getNextService();
 }
 
-Future<void> updateMusicDb() async {
+Future<void> updateMusicDb({isAdmin = false}) async {
   print('updating db');
 
   String musicURI;
@@ -38,7 +40,16 @@ Future<void> updateMusicDb() async {
   }
 
   try {
-    response = await http.get((Uri.parse(musicURI)));
+    response = await http
+        .get((Uri.parse(musicURI)))
+        .timeout(const Duration(seconds: 5));
+  } on TimeoutException {
+    if (!kIsWeb) {
+      Fluttertoast.showToast(
+        msg: 'Failed to update music, check your internet connection',
+      );
+    }
+    return;
   } catch (e) {
     print(e);
     if (!kIsWeb) {
@@ -50,12 +61,12 @@ Future<void> updateMusicDb() async {
   }
 
   if (response.statusCode == 200) {
-    var parsedMusic = parseCsv(response.body);
+    var parsedMusic = parseCsv(response.body, isAdmin: isAdmin);
     if (parsedMusic.isEmpty) {
       return;
     }
     await DbFunctions().deleteAllMusic();
-    await DbFunctions().addMultipleMusic(parsedMusic);
+    await DbFunctions().addMultipleMusic(parsedMusic, isAdmin: isAdmin);
   } else {
     if (!kIsWeb) {
       Fluttertoast.showToast(msg: 'Failed to update music');
@@ -63,7 +74,7 @@ Future<void> updateMusicDb() async {
   }
 }
 
-List<Music> parseCsv(String csv) {
+List<Music> parseCsv(String csv, {isAdmin = false}) {
   List<List<dynamic>> parsedList = const CsvToListConverter().convert(
     csv,
     eol: '\n',
@@ -80,7 +91,11 @@ List<Music> parseCsv(String csv) {
   try {
     musicList = mappedList.map((e) => Music.fromCsv(e)).toList();
   } on FormatException {
-    if (!kIsWeb) {
+    if (isAdmin && !kIsWeb) {
+      Fluttertoast.showToast(
+        msg: 'Failed to update music - required fields missing',
+      );
+    } else if (!kIsWeb) {
       Fluttertoast.showToast(msg: 'Failed to update music');
     }
   }

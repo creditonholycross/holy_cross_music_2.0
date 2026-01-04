@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/models/music.dart';
+import 'package:holy_cross_music/screens/home.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
@@ -59,7 +60,18 @@ class MusicDatabaseHelper {
 
   Future<int> insertMusic(Music music) async {
     Database db = await database;
-    var result = await db.insert(musicTable, music.toMap());
+    int result;
+    try {
+      result = await db.insert(musicTable, music.toMap());
+    } catch (e) {
+      if (e.toString().contains('UNIQUE constraint failed')) {
+        throw AdminException(
+          'Duplicate entry for ${music.serviceType} ${music.title}',
+        );
+      }
+      rethrow;
+    }
+
     return result;
   }
 

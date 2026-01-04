@@ -340,8 +340,14 @@ void getThemeName() async {
 
 Color serviceOnPrimaryColour(String theme, Brightness brightness) {
   if (brightness == Brightness.light) {
-    return GlobalThemeData.themeLightMap[theme]!.colorScheme.onPrimary;
+    var themeData =
+        GlobalThemeData.themeLightMap[theme] ??
+        GlobalThemeData.themeLightMap['red'];
+    return themeData!.colorScheme.onPrimary;
   } else {
-    return GlobalThemeData.themeDarkMap[theme]!.colorScheme.onPrimary;
+    var themeData =
+        GlobalThemeData.themeDarkMap[theme] ??
+        GlobalThemeData.themeDarkMap['red'];
+    return themeData!.colorScheme.onPrimary;
   }
 }
