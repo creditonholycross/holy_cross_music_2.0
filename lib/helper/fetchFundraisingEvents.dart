@@ -15,7 +15,9 @@ fetchFundraisingEvents() async {
   http.Response response;
 
   try {
-    response = await http.get((Uri.parse(eventsLink)));
+    response = await http
+        .get((Uri.parse(eventsLink)))
+        .timeout(Duration(seconds: 5));
   } catch (e) {
     print(e);
     if (!kIsWeb) {
@@ -70,7 +72,7 @@ Map<String, List<MonthlyFundraisingEvents>> groupEventsByMonth(
   var monthlyList = <MonthlyFundraisingEvents>[];
 
   var filteredList = eventList.where((item) {
-    if (item.date == null || item.day != null) {
+    if (item.date == '' || item.day != '') {
       return true;
     }
     var startDatetime = DateTime.parse(item.date as String);

@@ -5,14 +5,16 @@ import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DbFunctions {
-  Future addMusic(Music music) async {
+  Future addMusic(Music music, {bool isAdmin = false}) async {
     MusicDatabaseHelper dbHelper = MusicDatabaseHelper();
     await dbHelper.insertMusic(music);
   }
 
-  Future addMultipleMusic(List<Music> musicList) async {
+  Future addMultipleMusic(List<Music> musicList, {bool isAdmin = false}) async {
     MusicDatabaseHelper dbHelper = MusicDatabaseHelper();
     for (var music in musicList) {
       await dbHelper.insertMusic(music);

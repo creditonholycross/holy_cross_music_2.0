@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/app_state.dart';
-import 'package:holy_cross_music/models/music.dart';
-import 'package:holy_cross_music/screens/month_overview.dart';
-import 'package:holy_cross_music/screens/service_music.dart';
 import 'package:provider/provider.dart';
 
 class TruroPage extends StatefulWidget {
@@ -15,17 +12,34 @@ class TruroPage extends StatefulWidget {
 class _TruroPageState extends State<TruroPage> {
   var currentPageIndex = 0;
 
+  void asyncLoadData(BuildContext context) async {
+    if (context.read<ApplicationState>().truroMusic == null) {
+      print('Loading Truro music');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    asyncLoadData(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<ApplicationState>();
     var truroMusic = appState.truroMusic;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: appState.serviceColour,
-        iconTheme: IconThemeData(color: appState.onPrimaryColor),
-        title: Text('Truro', style: TextStyle(color: appState.onPrimaryColor)),
-      ),
+      appBar: !['admin', 'superadmin'].contains(appState.userLevel)
+          ? AppBar(
+              backgroundColor: appState.serviceColour,
+              iconTheme: IconThemeData(color: appState.onPrimaryColor),
+              title: Text(
+                'Truro',
+                style: TextStyle(color: appState.onPrimaryColor),
+              ),
+            )
+          : null,
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           setState(() {
@@ -131,7 +145,14 @@ class _TruroPageState extends State<TruroPage> {
           ),
         ],
       ),
-      body: SingleChildScrollView(child: Column()),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text('Coming soon!', style: TextStyle(fontSize: 18)),
+          ),
+        ),
+      ),
     );
   }
 }

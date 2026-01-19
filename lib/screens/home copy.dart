@@ -37,16 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList();
     Service? nextService = serviceList?.first.services.firstOrNull;
     String serviceColour = nextService?.colour ?? 'base';
-    Map<String, List<MonthlyEvents>>? eventList = await fetchEvents();
-    Map<String, List<MonthlyFundraisingEvents>>? fundraisingEventList =
-        await fetchFundraisingEvents();
+    // Map<String, List<MonthlyEvents>>? eventList = await fetchEvents();
+    // Map<String, List<MonthlyFundraisingEvents>>? fundraisingEventList =
+    //     await fetchFundraisingEvents();
 
     setState(() {
       context.read<ApplicationState>().serviceList = serviceList;
       context.read<ApplicationState>().nextService = nextService;
-      context.read<ApplicationState>().eventList = eventList;
-      context.read<ApplicationState>().fundraisingEventList =
-          fundraisingEventList;
+      // context.read<ApplicationState>().eventList = eventList;
+      // context.read<ApplicationState>().fundraisingEventList =
+      //     fundraisingEventList;
       context.read<ApplicationState>().initMusicSpinner = false;
       context.read<ApplicationState>().serviceColour = Service.serviceColor(
         serviceColour,

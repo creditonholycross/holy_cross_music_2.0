@@ -7,6 +7,7 @@ import 'package:holy_cross_music/helper/fetchCatalogue.dart';
 import 'package:holy_cross_music/helper/fetchEvents.dart';
 import 'package:holy_cross_music/helper/fetchFundraisingEvents.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
+import 'package:holy_cross_music/helper/wearOs.dart';
 import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
@@ -22,6 +23,12 @@ import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
 
+class AdminException implements Exception {
+  String msg;
+  AdminException(this.msg);
+  String toString() => 'Error: $msg';
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -33,7 +40,21 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
 
   void asyncLoadData(BuildContext context) async {
-    await updateMusicDb();
+    try {
+      await updateMusicDb();
+    } on AdminException catch (e) {
+      if ([
+            'admin',
+            'superadmin',
+          ].contains(context.read<ApplicationState>().userLevel) &&
+          !kIsWeb) {
+        Fluttertoast.showToast(msg: e.toString());
+      }
+      // } catch (e) {
+      //   if (!kIsWeb) {
+      //     Fluttertoast.showToast(msg: e.toString());
+      //   }
+    }
 
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList();
     Service? nextService = serviceList?.first.services.firstOrNull;
@@ -47,6 +68,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context.read<ApplicationState>().serviceColour = Service.serviceColor(
         serviceColour,
         Brightness.dark,
+        isAdmin: [
+          'admin',
+          'superadmin',
+        ].contains(context.read<ApplicationState>().userLevel),
       );
       context.read<ApplicationState>().onPrimaryColor = serviceOnPrimaryColour(
         serviceColour,
@@ -54,6 +79,15 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       onThemeChanged(serviceColour, context.read<ApplicationState>());
     });
+
+    if (!kIsWeb) {
+      var wearOs = WearOs();
+      wearOs.init();
+      List devices = await wearOs.listDevices();
+      if (devices.isNotEmpty) {
+        wearOs.sync(nextService);
+      }
+    }
 
     var catalogueCount = await DbFunctions().getCatalogueCount();
     if (catalogueCount == 0) {
@@ -80,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: appState.serviceColour,
         title: Text(
-          ['Holy Cross Music', 'Manage Users'][currentPageIndex],
+          ['Holy Cross Music', 'Truro', 'Manage Users'][currentPageIndex],
           style: TextStyle(color: appState.onPrimaryColor),
         ),
         leading: currentPageIndex != 0
@@ -94,12 +128,18 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             : null,
         actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: appState.onPrimaryColor),
-            onPressed: () async {
-              Fluttertoast.showToast(msg: 'Updating');
-            },
-          ),
+          if (!(['admin', 'superadmin'].contains(appState.userLevel) &&
+              currentPageIndex != 0))
+            IconButton(
+              icon: Icon(Icons.refresh, color: appState.onPrimaryColor),
+              onPressed: () async {
+                setState(() {
+                  appState.initMusicSpinner = true;
+                });
+                asyncLoadData(context);
+                Fluttertoast.showToast(msg: 'Updating');
+              },
+            ),
           IconButton(
             icon: Icon(Icons.person, color: appState.onPrimaryColor),
             onPressed: () {
@@ -137,6 +177,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Home',
                 ),
                 NavigationDestination(
+                  selectedIcon: Icon(Icons.music_note),
+                  icon: Icon(Icons.music_note, color: appState.onPrimaryColor),
+                  label: 'Truro',
+                ),
+                NavigationDestination(
                   selectedIcon: Icon(Icons.manage_accounts),
                   icon: Icon(
                     Icons.manage_accounts,
@@ -148,76 +193,44 @@ class _HomeScreenState extends State<HomeScreen> {
             )
           : null,
       body: [
-        Column(
-          children: [
-            Image.asset('images/church.jpg', fit: BoxFit.cover),
-            if (appState.nextService == null && !appState.initMusicSpinner)
-              const ListTile(
-                title: Text(
-                  'Next service:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text('No upcoming services'),
-              ),
-            if (appState.nextService != null && !appState.initMusicSpinner)
-              ListTile(
-                title: const Text(
-                  'Next service:',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
-                subtitle: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text:
-                            '${Music.parseDate(appState.nextService!.date)} - ${appState.nextService!.serviceType}',
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      TextSpan(
-                        text:
-                            ' \nRehearsal - ${Music.formatTime(appState.nextService!.rehearsalTime)}\nService - ${Music.formatTime(appState.nextService!.time)}',
-                        style: const TextStyle(
-                          fontStyle: FontStyle.italic,
-                          fontSize: 16,
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              Image.asset('images/church.jpg', fit: BoxFit.cover),
+              if (!appState.initMusicSpinner)
+                Column(
+                  children: [
+                    if (appState.nextService == null)
+                      const ListTile(
+                        title: Text(
+                          'Next service:',
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
+                        subtitle: Text('No upcoming services'),
                       ),
-                    ],
-                  ),
-                ),
-                onTap: () {
-                  appState.setCurrentService(appState.nextService!);
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const ServiceMusicPage(),
-                    ),
-                  );
-                },
-              ),
-            if (!appState.initMusicSpinner)
-              GridView.count(
-                crossAxisCount: 3,
-                physics: NeverScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                shrinkWrap: true,
-                children: [
-                  if (appState.nextService != null)
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: InkWell(
-                        child: Card(
-                          color: appState.serviceColour,
-                          shadowColor: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                    if (appState.nextService != null)
+                      ListTile(
+                        title: const Text(
+                          'Next service:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle: Text.rich(
+                          TextSpan(
                             children: [
-                              Text(
-                                'Next\nservice',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: appState.onPrimaryColor,
+                              TextSpan(
+                                text:
+                                    '${Music.parseDate(appState.nextService!.date)} - ${appState.nextService!.serviceType}',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              TextSpan(
+                                text:
+                                    ' \nRehearsal - ${Music.formatTime(appState.nextService!.rehearsalTime)}\nService - ${Music.formatTime(appState.nextService!.time)}',
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 16,
                                 ),
                               ),
                             ],
@@ -232,153 +245,105 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
-                    ),
-                  if (appState.nextService != null)
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: InkWell(
-                        child: Card(
-                          color: appState.serviceColour,
-                          shadowColor: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Upcoming\nservices',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: appState.onPrimaryColor,
-                                ),
-                              ),
-                            ],
+                    if (appState.nextService != null)
+                      Card(
+                        child: ListTile(
+                          title: const Text(
+                            'View next service',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
-                        ),
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const ServiceListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: InkWell(
-                      child: Card(
-                        color: appState.serviceColour,
-                        shadowColor: Colors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Music\ncatalogue',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: appState.onPrimaryColor,
+                          onTap: () {
+                            appState.setCurrentService(appState.nextService!);
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const ServiceMusicPage(),
                               ),
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const CataloguePage(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    child: InkWell(
-                      child: Card(
-                        color: appState.serviceColour,
-                        shadowColor: Colors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Events and\nfundraising',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: appState.onPrimaryColor,
-                              ),
+                    if (appState.nextService != null)
+                      Card(
+                        child: ListTile(
+                          title: const Text(
+                            'View upcoming services',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
-                          ],
+                          ),
+                          onTap: () async {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const ServiceListPage(),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                      onTap: () async {
-                        if (appState.eventList == null ||
-                            appState.fundraisingEventList == null) {
-                          appState.initEventsSpinner = true;
-                        }
-
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const EventsPage(),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  if (['admin', 'superadmin'].contains(appState.userLevel))
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: InkWell(
-                        child: Card(
-                          color: appState.serviceColour,
-                          shadowColor: Colors.white,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Truro',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: appState.onPrimaryColor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          if (appState.truroMusic == null) {
-                            appState.initTruroSpinner = true;
-                          }
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const TruroPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                ],
-              ),
-            if (appState.initMusicSpinner)
-              Center(
-                child: const Padding(
+                  ],
+                )
+              else
+                const Padding(
                   padding: EdgeInsets.all(16.0),
                   child: CircularProgressIndicator(),
                 ),
+              Card(
+                child: ListTile(
+                  title: const Text(
+                    'View upcoming choir events and fundraising',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  onTap: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const EventsPage(),
+                      ),
+                    );
+                  },
+                ),
               ),
-          ],
+              // if (!['admin', 'superadmin'].contains(appState.userLevel))
+              //   Card(
+              //     child: ListTile(
+              //       title: const Text(
+              //         'Truro',
+              //         style: TextStyle(
+              //           fontWeight: FontWeight.bold,
+              //           fontSize: 18,
+              //         ),
+              //       ),
+              //       onTap: () async {
+              //         Navigator.of(context).push(
+              //           MaterialPageRoute(
+              //             builder: (context) => const TruroPage(),
+              //           ),
+              //         );
+              //       },
+              //     ),
+              //   ),
+              Card(
+                child: ListTile(
+                  title: const Text(
+                    'View music catalogue',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  onTap: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CataloguePage(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
+        TruroPage(),
         UserManagementScreen(),
       ][currentPageIndex],
     );

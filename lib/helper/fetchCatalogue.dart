@@ -20,7 +20,9 @@ Future<void> updateCatalogueDb() async {
   print('updating db');
   http.Response response;
   try {
-    response = await http.get((Uri.parse(catalogueLink)));
+    response = await http
+        .get((Uri.parse(catalogueLink)))
+        .timeout(Duration(seconds: 5));
   } catch (e) {
     return;
   }
