@@ -1,6 +1,8 @@
 import 'package:holy_cross_music/models/music.dart';
 import 'package:flutter/material.dart';
 import 'package:holy_cross_music/themes/themes.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class Service {
   final String date;
@@ -53,27 +55,59 @@ class Service {
     );
   }
 
-  static Color serviceColor(String theme, Brightness brightness) {
+  static Color serviceColor(
+    String theme,
+    Brightness brightness, {
+    bool isAdmin = false,
+  }) {
     if (brightness == Brightness.light) {
-      return GlobalThemeData.themeLightMap[theme]!.colorScheme.tertiary;
+      if (isAdmin && GlobalThemeData.themeLightMap[theme] == null && !kIsWeb) {
+        Fluttertoast.showToast(
+          msg: 'Service colour "$theme" is not a valid theme colour.',
+        );
+      }
+      var themeData =
+          GlobalThemeData.themeLightMap[theme] ??
+          GlobalThemeData.themeLightMap['red'];
+      return themeData!.colorScheme.tertiary;
     } else {
-      return GlobalThemeData.themeDarkMap[theme]!.colorScheme.tertiary;
+      if (isAdmin && GlobalThemeData.themeDarkMap[theme] == null && !kIsWeb) {
+        Fluttertoast.showToast(
+          msg: 'Service colour "$theme" is not a valid theme colour.',
+        );
+      }
+      var themeData =
+          GlobalThemeData.themeDarkMap[theme] ??
+          GlobalThemeData.themeDarkMap['red'];
+      return themeData!.colorScheme.tertiary;
     }
   }
 
   Color servicePrimaryColour(Brightness brightness) {
     if (brightness == Brightness.light) {
-      return GlobalThemeData.themeLightMap[colour]!.colorScheme.tertiary;
+      var themeData =
+          GlobalThemeData.themeLightMap[colour] ??
+          GlobalThemeData.themeLightMap['red'];
+      return themeData!.colorScheme.tertiary;
     } else {
-      return GlobalThemeData.themeDarkMap[colour]!.colorScheme.tertiary;
+      var themeData =
+          GlobalThemeData.themeDarkMap[colour] ??
+          GlobalThemeData.themeDarkMap['red'];
+      return themeData!.colorScheme.tertiary;
     }
   }
 
   Color serviceOnPrimaryColour(Brightness brightness) {
     if (brightness == Brightness.light) {
-      return GlobalThemeData.themeLightMap[colour]!.colorScheme.onPrimary;
+      var themeData =
+          GlobalThemeData.themeLightMap[colour] ??
+          GlobalThemeData.themeLightMap['red'];
+      return themeData!.colorScheme.onPrimary;
     } else {
-      return GlobalThemeData.themeDarkMap[colour]!.colorScheme.onPrimary;
+      var themeData =
+          GlobalThemeData.themeDarkMap[colour] ??
+          GlobalThemeData.themeDarkMap['red'];
+      return themeData!.colorScheme.onPrimary;
     }
   }
 }

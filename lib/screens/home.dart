@@ -7,6 +7,7 @@ import 'package:holy_cross_music/helper/fetchCatalogue.dart';
 import 'package:holy_cross_music/helper/fetchEvents.dart';
 import 'package:holy_cross_music/helper/fetchFundraisingEvents.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
+import 'package:holy_cross_music/helper/wearOs.dart';
 import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
@@ -21,6 +22,12 @@ import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/themes/themes.dart';
 import 'package:provider/provider.dart';
 
+class AdminException implements Exception {
+  String msg;
+  AdminException(this.msg);
+  String toString() => 'Error: $msg';
+}
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -32,7 +39,21 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentPageIndex = 0;
 
   void asyncLoadData(BuildContext context) async {
-    await updateMusicDb();
+    try {
+      await updateMusicDb();
+    } on AdminException catch (e) {
+      if ([
+            'admin',
+            'superadmin',
+          ].contains(context.read<ApplicationState>().userLevel) &&
+          !kIsWeb) {
+        Fluttertoast.showToast(msg: e.toString());
+      }
+      // } catch (e) {
+      //   if (!kIsWeb) {
+      //     Fluttertoast.showToast(msg: e.toString());
+      //   }
+    }
 
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList();
     Service? nextService = serviceList?.first.services.firstOrNull;
@@ -51,6 +72,10 @@ class _HomeScreenState extends State<HomeScreen> {
       context.read<ApplicationState>().serviceColour = Service.serviceColor(
         serviceColour,
         Brightness.dark,
+        isAdmin: [
+          'admin',
+          'superadmin',
+        ].contains(context.read<ApplicationState>().userLevel),
       );
       context.read<ApplicationState>().onPrimaryColor = serviceOnPrimaryColour(
         serviceColour,
@@ -58,6 +83,15 @@ class _HomeScreenState extends State<HomeScreen> {
       );
       onThemeChanged(serviceColour, context.read<ApplicationState>());
     });
+
+    if (!kIsWeb) {
+      var wearOs = WearOs();
+      wearOs.init();
+      List devices = await wearOs.listDevices();
+      if (devices.isNotEmpty) {
+        wearOs.sync(nextService);
+      }
+    }
 
     var catalogueCount = await DbFunctions().getCatalogueCount();
     if (catalogueCount == 0) {
@@ -101,6 +135,10 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.refresh, color: appState.onPrimaryColor),
             onPressed: () async {
+              setState(() {
+                appState.initMusicSpinner = true;
+              });
+              asyncLoadData(context);
               Fluttertoast.showToast(msg: 'Updating');
             },
           ),
