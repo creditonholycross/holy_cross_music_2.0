@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:holy_cross_music/database/db_functions.dart';
 import 'package:holy_cross_music/helper/fetchCatalogue.dart';
-import 'package:holy_cross_music/helper/fetchEvents.dart';
-import 'package:holy_cross_music/helper/fetchFundraisingEvents.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
 import 'package:holy_cross_music/helper/wearOs.dart';
 import 'package:holy_cross_music/models/catalogue.dart';
@@ -50,10 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
           !kIsWeb) {
         Fluttertoast.showToast(msg: e.toString());
       }
-      // } catch (e) {
-      //   if (!kIsWeb) {
-      //     Fluttertoast.showToast(msg: e.toString());
-      //   }
     }
 
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList();
@@ -62,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       context.read<ApplicationState>().serviceList = serviceList;
-      context.read<ApplicationState>().truroMusic = serviceList;
+      // context.read<ApplicationState>().truroMusic = serviceList;
       context.read<ApplicationState>().nextService = nextService;
       context.read<ApplicationState>().initMusicSpinner = false;
       context.read<ApplicationState>().serviceColour = Service.serviceColor(
@@ -177,8 +171,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   label: 'Home',
                 ),
                 NavigationDestination(
-                  selectedIcon: Icon(Icons.music_note),
-                  icon: Icon(Icons.music_note, color: appState.onPrimaryColor),
+                  selectedIcon: Icon(Icons.add_reaction),
+                  icon: Icon(
+                    Icons.add_reaction,
+                    color: appState.onPrimaryColor,
+                  ),
                   label: 'Truro',
                 ),
                 NavigationDestination(

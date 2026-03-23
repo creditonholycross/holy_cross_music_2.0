@@ -26,7 +26,7 @@ class ApplicationState extends ChangeNotifier {
 
   late Service currentService;
   List<MonthlyMusic>? serviceList;
-  List<MonthlyMusic>? truroMusic;
+  Map<int, List<Service>>? truroMusic;
   Service? nextService;
   Map<String, List<MonthlyEvents>>? eventList;
   Map<String, List<MonthlyFundraisingEvents>>? fundraisingEventList;

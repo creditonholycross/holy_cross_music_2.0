@@ -36,6 +36,8 @@ class ServiceMusicPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ServiceTitleWidget(currentService: currentService),
+            if (currentService.conductor != '')
+              ServiceConductorWidget(currentService: currentService),
             if (currentService.organist! != '')
               ServiceOrganistWidget(currentService: currentService),
             ServiceOverviewWidget(currentService: currentService),

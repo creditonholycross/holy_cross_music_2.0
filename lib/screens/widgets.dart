@@ -21,6 +21,23 @@ class ServiceTitleWidget extends StatelessWidget {
   }
 }
 
+class ServiceConductorWidget extends StatelessWidget {
+  const ServiceConductorWidget({super.key, required this.currentService});
+
+  final Service currentService;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Text(
+        'Conductor: ${currentService.conductor!}',
+        style: const TextStyle(fontSize: 18),
+      ),
+    );
+  }
+}
+
 class ServiceOrganistWidget extends StatelessWidget {
   const ServiceOrganistWidget({super.key, required this.currentService});
 
@@ -173,6 +190,40 @@ class PlayLinkWidget extends StatelessWidget {
         );
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
       },
+    );
+  }
+}
+
+class RehearsalTimeWidget extends StatelessWidget {
+  const RehearsalTimeWidget({super.key, required this.currentService});
+
+  final Service currentService;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, top: 4, bottom: 4),
+      child: Text(
+        'Rehearsal: ${Music.formatTime(currentService.rehearsalTime)}',
+        style: const TextStyle(fontSize: 22),
+      ),
+    );
+  }
+}
+
+class ServiceTimeWidget extends StatelessWidget {
+  const ServiceTimeWidget({super.key, required this.currentService});
+
+  final Service currentService;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8, top: 4, bottom: 4),
+      child: Text(
+        'Service: ${Music.formatTime(currentService.time)}',
+        style: const TextStyle(fontSize: 22),
+      ),
     );
   }
 }
