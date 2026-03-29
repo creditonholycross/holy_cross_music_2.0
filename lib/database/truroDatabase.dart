@@ -6,11 +6,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-class MusicDatabaseHelper {
-  static MusicDatabaseHelper? _musicDatabaseHelper;
+class TruroDatabaseHelper {
+  static TruroDatabaseHelper? _truroDatabaseHelper;
   static Database? _database;
 
-  String musicTable = 'musicTable';
+  String musicTable = 'truroTable';
 
   Future<Database> get database async {
     _database ??= await initialiseDatabase();

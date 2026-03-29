@@ -72,7 +72,7 @@ Map<String, List<MonthlyFundraisingEvents>> groupEventsByMonth(
   var monthlyList = <MonthlyFundraisingEvents>[];
 
   var filteredList = eventList.where((item) {
-    if (item.date == null || item.day != null) {
+    if (item.date == '' || item.day != '') {
       return true;
     }
     var startDatetime = DateTime.parse(item.date as String);

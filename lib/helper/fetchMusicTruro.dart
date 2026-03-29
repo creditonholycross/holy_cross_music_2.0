@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:csv/csv.dart';
 import 'package:holy_cross_music/database/database.dart';
 import 'package:holy_cross_music/database/db_functions.dart';
+import 'package:holy_cross_music/helper/fetchMusic.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
@@ -10,24 +11,15 @@ import 'package:http/http.dart' as http;
 import "package:collection/collection.dart";
 import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 var musicLink =
-    'https://docs.google.com/spreadsheets/d/1r71O_Bm_-dkKBTtyAPMYMfhh1lg5-MwypKAnEs2eYkQ/gviz/tq?tqx=out:csv&sheet=schedule';
+    'https://docs.google.com/spreadsheets/d/1r71O_Bm_-dkKBTtyAPMYMfhh1lg5-MwypKAnEs2eYkQ/gviz/tq?tqx=out:csv&sheet=Truro';
 
 var testingMusicLink =
-    'https://docs.google.com/spreadsheets/d/1r71O_Bm_-dkKBTtyAPMYMfhh1lg5-MwypKAnEs2eYkQ/gviz/tq?tqx=out:csv&sheet=schedule';
+    'https://docs.google.com/spreadsheets/d/1r71O_Bm_-dkKBTtyAPMYMfhh1lg5-MwypKAnEs2eYkQ/gviz/tq?tqx=out:csv&sheet=Truro';
 
-Future<Service?> fetchMusic() async {
-  print('fetching music');
-  var allServices = await DbFunctions().getServiceList();
-
-  if (allServices == null) {
-    updateMusicDb();
-  }
-  // return await DbFunctions().getNextService();
-}
-
-Future<void> updateMusicDb({isAdmin = false}) async {
+Future<void> updateTruroMusicDb({isAdmin = false}) async {
   print('updating db');
 
   String musicURI;
@@ -65,8 +57,8 @@ Future<void> updateMusicDb({isAdmin = false}) async {
     if (parsedMusic.isEmpty) {
       return;
     }
-    await DbFunctions().deleteAllMusic();
-    await DbFunctions().addMultipleMusic(parsedMusic, isAdmin: isAdmin);
+    await DbFunctions().deleteTruroMusic();
+    await DbFunctions().addMultipleTruroMusic(parsedMusic, isAdmin: isAdmin);
   } else {
     if (!kIsWeb) {
       Fluttertoast.showToast(msg: 'Failed to update music');
@@ -103,25 +95,39 @@ List<Music> parseCsv(String csv, {isAdmin = false}) {
   return musicList;
 }
 
-List<Service> groupMusic(List<Music> musicList) {
-  var newMap = groupBy(musicList, (item) => '${item.date},${item.serviceType}');
+var dateMapping = {
+  '20260727': 0,
+  '20260728': 1,
+  '20260729': 2,
+  '20260730': 3,
+  '20260731': 4,
+  '20260802': 5,
+};
 
-  var serviceList = <Service>[];
-
-  newMap.forEach((k, v) => serviceList.add(Service.createService(k, v)));
-  return serviceList;
+Map<int, List<Service>> truroDateToIndex(Map<String, List<Service>> musicList) {
+  Map<int, List<Service>> newMap = {0: [], 1: [], 2: [], 3: [], 4: [], 5: []};
+  musicList.forEach((k, v) {
+    if (dateMapping.containsKey(k)) {
+      newMap[dateMapping[k] as int] = v;
+    }
+  });
+  return newMap;
 }
 
-List<MonthlyMusic> groupMusicByMonth(List<Music> musicList) {
+Map<int, List<Service>> groupMusicByDay(List<Music> musicList) {
   var serviceList = groupMusic(musicList);
+  var serviceMap = groupBy(serviceList, (item) => item.date);
 
-  var monthlyList = <MonthlyMusic>[];
+  return truroDateToIndex(serviceMap);
+}
 
-  var serviceMap = groupBy(serviceList, (item) => item.date.substring(4, 6));
+int getindexForDate() {
+  var dateNow = DateTime.now();
+  var formatter = DateFormat('yyyyMMdd');
+  String formattedDate = formatter.format(dateNow);
 
-  serviceMap.forEach(
-    (k, v) => monthlyList.add(MonthlyMusic.createService(k, v)),
-  );
-
-  return monthlyList;
+  if (dateMapping.containsKey(formattedDate)) {
+    return dateMapping[formattedDate] as int;
+  }
+  return 0;
 }

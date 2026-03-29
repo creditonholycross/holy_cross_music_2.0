@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:holy_cross_music/database/db_functions.dart';
 import 'package:holy_cross_music/helper/fetchCatalogue.dart';
-import 'package:holy_cross_music/helper/fetchEvents.dart';
-import 'package:holy_cross_music/helper/fetchFundraisingEvents.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
 import 'package:holy_cross_music/helper/wearOs.dart';
 import 'package:holy_cross_music/models/catalogue.dart';
@@ -17,6 +15,7 @@ import 'package:holy_cross_music/screens/events.dart';
 import 'package:holy_cross_music/screens/profile.dart';
 import 'package:holy_cross_music/screens/service_list.dart';
 import 'package:holy_cross_music/screens/service_music.dart';
+import 'package:holy_cross_music/screens/truro.dart';
 import 'package:holy_cross_music/screens/user_management.dart';
 import 'package:holy_cross_music/app_state.dart';
 import 'package:holy_cross_music/themes/themes.dart';
@@ -49,25 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
           !kIsWeb) {
         Fluttertoast.showToast(msg: e.toString());
       }
-      // } catch (e) {
-      //   if (!kIsWeb) {
-      //     Fluttertoast.showToast(msg: e.toString());
-      //   }
     }
 
     List<MonthlyMusic>? serviceList = await DbFunctions().getServiceList();
     Service? nextService = serviceList?.first.services.firstOrNull;
     String serviceColour = nextService?.colour ?? 'base';
-    Map<String, List<MonthlyEvents>>? eventList = await fetchEvents();
-    Map<String, List<MonthlyFundraisingEvents>>? fundraisingEventList =
-        await fetchFundraisingEvents();
 
     setState(() {
       context.read<ApplicationState>().serviceList = serviceList;
+      // context.read<ApplicationState>().truroMusic = serviceList;
       context.read<ApplicationState>().nextService = nextService;
-      context.read<ApplicationState>().eventList = eventList;
-      context.read<ApplicationState>().fundraisingEventList =
-          fundraisingEventList;
       context.read<ApplicationState>().initMusicSpinner = false;
       context.read<ApplicationState>().serviceColour = Service.serviceColor(
         serviceColour,
@@ -118,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: appState.serviceColour,
         title: Text(
-          ['Holy Cross Music', 'Manage Users'][currentPageIndex],
+          ['Holy Cross Music', 'Truro', 'Manage Users'][currentPageIndex],
           style: TextStyle(color: appState.onPrimaryColor),
         ),
         leading: currentPageIndex != 0
@@ -132,16 +122,18 @@ class _HomeScreenState extends State<HomeScreen> {
               )
             : null,
         actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: appState.onPrimaryColor),
-            onPressed: () async {
-              setState(() {
-                appState.initMusicSpinner = true;
-              });
-              asyncLoadData(context);
-              Fluttertoast.showToast(msg: 'Updating');
-            },
-          ),
+          if (!(['admin', 'superadmin'].contains(appState.userLevel) &&
+              currentPageIndex != 0))
+            IconButton(
+              icon: Icon(Icons.refresh, color: appState.onPrimaryColor),
+              onPressed: () async {
+                setState(() {
+                  appState.initMusicSpinner = true;
+                });
+                asyncLoadData(context);
+                Fluttertoast.showToast(msg: 'Updating');
+              },
+            ),
           IconButton(
             icon: Icon(Icons.person, color: appState.onPrimaryColor),
             onPressed: () {
@@ -177,6 +169,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: appState.onPrimaryColor,
                   ),
                   label: 'Home',
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.add_reaction),
+                  icon: Icon(
+                    Icons.add_reaction,
+                    color: appState.onPrimaryColor,
+                  ),
+                  label: 'Truro',
                 ),
                 NavigationDestination(
                   selectedIcon: Icon(Icons.manage_accounts),
@@ -281,25 +281,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                       ),
-                    Card(
-                      child: ListTile(
-                        title: const Text(
-                          'View upcoming choir events and fundraising',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                        onTap: () async {
-                          // Fluttertoast.showToast(msg: 'Events');
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const EventsPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
                   ],
                 )
               else
@@ -307,6 +288,40 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.all(16.0),
                   child: CircularProgressIndicator(),
                 ),
+              Card(
+                child: ListTile(
+                  title: const Text(
+                    'View upcoming choir events and fundraising',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                  onTap: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const EventsPage(),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              // if (!['admin', 'superadmin'].contains(appState.userLevel))
+              //   Card(
+              //     child: ListTile(
+              //       title: const Text(
+              //         'Truro',
+              //         style: TextStyle(
+              //           fontWeight: FontWeight.bold,
+              //           fontSize: 18,
+              //         ),
+              //       ),
+              //       onTap: () async {
+              //         Navigator.of(context).push(
+              //           MaterialPageRoute(
+              //             builder: (context) => const TruroPage(),
+              //           ),
+              //         );
+              //       },
+              //     ),
+              //   ),
               Card(
                 child: ListTile(
                   title: const Text(
@@ -325,6 +340,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+        TruroPage(),
         UserManagementScreen(),
       ][currentPageIndex],
     );

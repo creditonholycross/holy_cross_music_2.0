@@ -10,6 +10,7 @@ class Service {
   final String? rehearsalTime;
   final String serviceType;
   final List<Music> music;
+  final String? conductor;
   final String? organist;
   final String colour;
 
@@ -19,6 +20,7 @@ class Service {
     required this.rehearsalTime,
     required this.serviceType,
     required this.music,
+    this.conductor,
     required this.organist,
     required this.colour,
   });
@@ -27,6 +29,7 @@ class Service {
     var idSplit = id.split(',');
     var organists = [];
     var colour = 'base';
+    var conductor = '';
 
     for (var item in music) {
       if (['', null].contains(item.serviceOrganist)) {
@@ -44,12 +47,20 @@ class Service {
       colour = item.colour as String;
     }
 
+    for (var item in music) {
+      if (['', null].contains(item.conductor)) {
+        continue;
+      }
+      conductor = item.conductor as String;
+    }
+
     return Service(
       date: idSplit[0],
       time: music[0].time,
       rehearsalTime: music[0].rehearsalTime,
       serviceType: music[0].serviceType,
       music: music,
+      conductor: conductor,
       organist: organists.join(', '),
       colour: colour,
     );

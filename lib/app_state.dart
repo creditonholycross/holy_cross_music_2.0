@@ -26,10 +26,13 @@ class ApplicationState extends ChangeNotifier {
 
   late Service currentService;
   List<MonthlyMusic>? serviceList;
+  Map<int, List<Service>>? truroMusic;
   Service? nextService;
   Map<String, List<MonthlyEvents>>? eventList;
   Map<String, List<MonthlyFundraisingEvents>>? fundraisingEventList;
   bool initMusicSpinner = true;
+  bool initEventsSpinner = true;
+  bool initTruroSpinner = true;
 
   void setCurrentService(Service service) {
     currentService = service;

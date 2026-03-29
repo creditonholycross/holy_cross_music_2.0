@@ -78,6 +78,10 @@ class MonthOverviewWidget extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (monthlyMusic.services[index].conductor != '')
+                    ServiceConductorWidget(
+                      currentService: monthlyMusic.services[index],
+                    ),
                   if (monthlyMusic.services[index].organist! != '')
                     ServiceOrganistWidget(
                       currentService: monthlyMusic.services[index],
@@ -149,6 +153,15 @@ Future<void> printDoc(MonthlyMusic monthlyMusic) async {
                           ),
                         ),
                       ),
+                      if (monthlyMusic.services[intList[j][index]].conductor! !=
+                          '')
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(bottom: 8),
+                          child: pw.Text(
+                            'Conductor: ${monthlyMusic.services[intList[j][index]].organist!}',
+                            style: const pw.TextStyle(fontSize: 12),
+                          ),
+                        ),
                       if (monthlyMusic.services[intList[j][index]].organist! !=
                           '')
                         pw.Padding(

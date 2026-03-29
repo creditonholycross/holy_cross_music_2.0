@@ -1,6 +1,8 @@
 import 'package:holy_cross_music/database/catalogueDatabase.dart';
 import 'package:holy_cross_music/database/database.dart';
+import 'package:holy_cross_music/database/truroDatabase.dart';
 import 'package:holy_cross_music/helper/fetchMusic.dart';
+import 'package:holy_cross_music/helper/fetchMusicTruro.dart';
 import 'package:holy_cross_music/models/catalogue.dart';
 import 'package:holy_cross_music/models/month.dart';
 import 'package:holy_cross_music/models/music.dart';
@@ -73,5 +75,31 @@ class DbFunctions {
   Future deleteCatalogue() async {
     CatalogueDatabaseHelper dbHelper = CatalogueDatabaseHelper();
     await dbHelper.deleteCatalogue();
+  }
+
+  Future addMultipleTruroMusic(
+    List<Music> musicList, {
+    bool isAdmin = false,
+  }) async {
+    TruroDatabaseHelper dbHelper = TruroDatabaseHelper();
+    for (var music in musicList) {
+      await dbHelper.insertMusic(music);
+    }
+  }
+
+  Future<Map<int, List<Service>>> getAllTruroServices() async {
+    TruroDatabaseHelper dbHelper = TruroDatabaseHelper();
+    var result = await dbHelper.getAllServices();
+    if (result.isEmpty) {
+      return groupMusicByDay([]);
+    }
+    var musicList = result.map((e) => Music.fromDb(e)).toList();
+
+    return groupMusicByDay(musicList);
+  }
+
+  Future deleteTruroMusic() async {
+    TruroDatabaseHelper dbHelper = TruroDatabaseHelper();
+    await dbHelper.deleteAllMusic();
   }
 }
