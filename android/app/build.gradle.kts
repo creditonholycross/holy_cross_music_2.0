@@ -9,6 +9,15 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        getByName("debug") {
+            storeFile =
+                file("/Users/jennyjohnson/Documents/Projects/holy_cross/holy_cross_music/keystore/debug.keystore")
+            storePassword = "android"
+            keyAlias = "AndroidDebugKey"
+            keyPassword = "android"
+        }
+    }
     namespace = "com.creditonholycross.musiclist"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
@@ -31,6 +40,7 @@ android {
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        signingConfig = signingConfigs.getByName("debug")
     }
 
     buildTypes {
