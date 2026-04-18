@@ -71,11 +71,25 @@ class WearOs {
       title: '-',
     );
 
+    var anthem = nextService.music.firstWhereOrNull(
+      (x) => x.musicType.contains("Anthem"),
+    );
+
+    anthem ??= const Music(
+      date: '',
+      time: '',
+      rehearsalTime: '',
+      serviceType: '',
+      musicType: '',
+      title: '-',
+    );
+
     var watchData = {
       "serviceType": nextService.serviceType,
       "serviceDate": nextService.date,
       "hymns": hymnTitle,
       "psalm": psalm.title,
+      "anthem": anthem.title,
     };
 
     print(watchData);

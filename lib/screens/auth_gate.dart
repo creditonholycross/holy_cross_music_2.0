@@ -85,7 +85,7 @@ class SignInWidget extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: AspectRatio(
             aspectRatio: 1,
-            child: Image.asset('images/crediton_boniface_community.png'),
+            child: Image.asset('images/boniface-1.png'),
           ),
         );
       },
@@ -111,7 +111,7 @@ class SignInWidget extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           child: AspectRatio(
             aspectRatio: 1,
-            child: Image.asset('images/crediton_boniface_community.png'),
+            child: Image.asset('images/boniface-1.png'),
           ),
         );
       },

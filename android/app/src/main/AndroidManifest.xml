@@ -3,8 +3,8 @@
     <application
         android:label="Holy Cross Music"
         android:name="${applicationName}"
-        android:icon="@mipmap/new_launcher"
-        android:roundIcon="@mipmap/new_launcher_round">
+        android:icon="@mipmap/ic_launcher_2"
+        android:roundIcon="@mipmap/ic_launcher_2_round">
         <activity
             android:name=".MainActivity"
             android:exported="true"
