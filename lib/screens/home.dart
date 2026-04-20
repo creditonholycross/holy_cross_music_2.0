@@ -303,25 +303,25 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              // if (!['admin', 'superadmin'].contains(appState.userLevel))
-              //   Card(
-              //     child: ListTile(
-              //       title: const Text(
-              //         'Truro',
-              //         style: TextStyle(
-              //           fontWeight: FontWeight.bold,
-              //           fontSize: 18,
-              //         ),
-              //       ),
-              //       onTap: () async {
-              //         Navigator.of(context).push(
-              //           MaterialPageRoute(
-              //             builder: (context) => const TruroPage(),
-              //           ),
-              //         );
-              //       },
-              //     ),
-              //   ),
+              if (!['admin', 'superadmin'].contains(appState.userLevel))
+                Card(
+                  child: ListTile(
+                    title: const Text(
+                      'Truro',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    onTap: () async {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const TruroPage(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               Card(
                 child: ListTile(
                   title: const Text(

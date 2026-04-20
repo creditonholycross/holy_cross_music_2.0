@@ -303,9 +303,18 @@ class Music {
       return 'N/A';
     } else if (time == '') {
       return 'N/A';
-    } else if (double.tryParse(time) == null) {
+    } else if (time.contains("-")) {
+      var timeSplit = time.split("-");
+      return '${padTime(timeSplit[0])} - ${padTime(timeSplit[1])}';
+    }
+     else if (double.tryParse(time) == null) {
       return time;
     }
+
+    return padTime(time);
+  }
+
+  static String padTime(String time) {
     var paddedTime = time.padLeft(6, '0');
     return '${paddedTime.substring(0, 2)}:${paddedTime.substring(2, 4)}';
   }
