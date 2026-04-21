@@ -148,9 +148,9 @@ class TitleFormatting extends StatelessWidget {
       musicTitle = hymnSplit[0];
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, top: 4, bottom: 4),
-      child: Text.rich(
+    return ListTile(
+      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+      title: Text.rich(
         TextSpan(
           children: [
             TextSpan(text: musicTitle, style: const TextStyle(fontSize: 18)),
@@ -165,6 +165,7 @@ class TitleFormatting extends StatelessWidget {
           ],
         ),
       ),
+      trailing: music!.link != '' ? PlayLinkWidget(music: music) : null,
     );
   }
 }
