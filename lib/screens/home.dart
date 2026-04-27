@@ -12,6 +12,7 @@ import 'package:holy_cross_music/models/music.dart';
 import 'package:holy_cross_music/models/service.dart';
 import 'package:holy_cross_music/screens/catalogueScreen.dart';
 import 'package:holy_cross_music/screens/events.dart';
+import 'package:holy_cross_music/screens/pdf.dart';
 import 'package:holy_cross_music/screens/profile.dart';
 import 'package:holy_cross_music/screens/service_list.dart';
 import 'package:holy_cross_music/screens/service_music.dart';
@@ -108,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: appState.serviceColour,
         title: Text(
-          ['Holy Cross Music', 'Truro', 'Manage Users'][currentPageIndex],
+          ['Holy Cross Music', 'Truro', 'Manage Users', 'PDF Generation'][currentPageIndex],
           style: TextStyle(color: appState.onPrimaryColor),
         ),
         leading: currentPageIndex != 0
@@ -185,6 +186,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: appState.onPrimaryColor,
                   ),
                   label: 'Manage Users',
+                ),
+                NavigationDestination(
+                  selectedIcon: Icon(Icons.file_download),
+                  icon: Icon(
+                    Icons.file_download,
+                    color: appState.onPrimaryColor,
+                  ),
+                  label: 'PDF',
                 ),
               ],
             )
@@ -342,6 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         TruroPage(),
         UserManagementScreen(),
+        PdfGeneratePage()
       ][currentPageIndex],
     );
   }
