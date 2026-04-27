@@ -10,13 +10,27 @@ class ServiceTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.all(8),
-      child: Text(
-        currentService.serviceType,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-      ),
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            currentService.serviceType,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+        ),
+        if (currentService.feast != null && currentService.feast != '') ...[
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 8, bottom: 8),
+            child: Text(
+              currentService.feast!,
+              style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 22),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -28,11 +42,14 @@ class ServiceConductorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Text(
-        'Conductor: ${currentService.conductor!}',
-        style: const TextStyle(fontSize: 18),
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8),
+        child: Text(
+          'Conductor: ${currentService.conductor!}',
+          style: const TextStyle(fontSize: 18),
+        ),
       ),
     );
   }
@@ -45,11 +62,14 @@ class ServiceOrganistWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Text(
-        'Organist: ${currentService.organist!}',
-        style: const TextStyle(fontSize: 18),
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          'Organist: ${currentService.organist!}',
+          style: const TextStyle(fontSize: 18),
+        ),
       ),
     );
   }

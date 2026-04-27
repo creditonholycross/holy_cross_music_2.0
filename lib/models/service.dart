@@ -9,6 +9,7 @@ class Service {
   final String time;
   final String? rehearsalTime;
   final String serviceType;
+  final String? feast;
   final List<Music> music;
   final String? conductor;
   final String? organist;
@@ -21,6 +22,7 @@ class Service {
     required this.serviceType,
     required this.music,
     this.conductor,
+    this.feast,
     required this.organist,
     required this.colour,
   });
@@ -54,11 +56,14 @@ class Service {
       conductor = item.conductor as String;
     }
 
+    var serviceTitle = music[0].serviceType.split(" - ");
+
     return Service(
       date: idSplit[0],
       time: music[0].time,
       rehearsalTime: music[0].rehearsalTime,
-      serviceType: music[0].serviceType,
+      serviceType: serviceTitle[0],
+      feast: serviceTitle.length > 1 ? serviceTitle[1] : '',
       music: music,
       conductor: conductor,
       organist: organists.join(', '),

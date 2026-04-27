@@ -109,6 +109,10 @@ class _ServiceListPageState extends State<ServiceListPage> {
                                         style: const TextStyle(fontSize: 18),
                                       ),
                                       TextSpan(
+                                        text: service[index].feast != '' ? ' - ${service[index].feast}' : '',
+                                        style: const TextStyle(fontSize: 18, fontStyle: FontStyle.italic),
+                                      ),
+                                      TextSpan(
                                         text:
                                             ' \nRehearsal - ${Music.formatTime(service[index].rehearsalTime)}\nService - ${Music.formatTime(service[index].time)}',
                                         style: const TextStyle(
