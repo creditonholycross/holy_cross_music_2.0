@@ -248,3 +248,51 @@ class ServiceTimeWidget extends StatelessWidget {
     );
   }
 }
+
+class SocialWidget extends StatelessWidget {
+  const SocialWidget({super.key, required this.currentService});
+
+  final Service currentService;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: currentService.music.length,
+      itemBuilder: (context, index) { 
+        return Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                currentService.serviceType,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 8, bottom: 8),
+              child: Text(
+                currentService.music[index].title,
+                style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 22),
+              ),
+            ),
+            if (currentService.music[index].rehearsalTime != '') ...[
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 8, bottom: 8),
+                child: Text(
+                  Music.formatTime(currentService.music[index].rehearsalTime),
+                  style: const TextStyle(fontSize: 22),
+                ),
+              ),
+            ]
+          ],
+        );
+      }
+    );
+  }
+}

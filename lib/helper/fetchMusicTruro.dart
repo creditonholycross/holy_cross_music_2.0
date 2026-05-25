@@ -101,7 +101,8 @@ var dateMapping = {
   '20260729': 2,
   '20260730': 3,
   '20260731': 4,
-  '20260802': 5,
+  '20260801': 5,
+  '20260802': 6,
 };
 
 Map<int, List<Service>> truroDateToIndex(Map<String, List<Service>> musicList) {
