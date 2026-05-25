@@ -158,6 +158,21 @@ class _TruroPageState extends State<TruroPage> {
           ),
           NavigationDestination(
             icon: Text(
+              'Sat',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            selectedIcon: Text(
+              'Sat',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            label: '',
+          ),
+          NavigationDestination(
+            icon: Text(
               'Sun',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
@@ -218,15 +233,20 @@ class TruroMusicWidget extends StatelessWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ServiceTitleWidget(currentService: currentService),
-                  RehearsalTimeWidget(currentService: currentService),
-                  ServiceTimeWidget(currentService: currentService),
-                  if (currentService.conductor != '')
-                    ServiceConductorWidget(currentService: currentService),
-                  if (currentService.organist! != '')
-                    ServiceOrganistWidget(currentService: currentService),
-                  ServiceOverviewWidget(currentService: currentService),
-                  Divider(),
+                  if (currentService.serviceType != "Social") ...[
+                    ServiceTitleWidget(currentService: currentService),
+                    RehearsalTimeWidget(currentService: currentService),
+                    ServiceTimeWidget(currentService: currentService),
+                    if (currentService.conductor != '')
+                      ServiceConductorWidget(currentService: currentService),
+                    if (currentService.organist! != '')
+                      ServiceOrganistWidget(currentService: currentService),
+                    ServiceOverviewWidget(currentService: currentService),
+                    Divider(),
+                  ],
+                  if (currentService.serviceType == "Social") ...[
+                    SocialWidget(currentService: currentService)
+                  ]
                 ],
               );
             },

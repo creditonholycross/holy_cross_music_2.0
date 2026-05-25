@@ -10,13 +10,27 @@ class ServiceTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: const EdgeInsets.all(8),
-      child: Text(
-        currentService.serviceType,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-      ),
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            currentService.serviceType,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+        ),
+        if (currentService.feast != null && currentService.feast != '') ...[
+          Container(
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 8, bottom: 8),
+            child: Text(
+              currentService.feast!,
+              style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 22),
+            ),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -28,11 +42,14 @@ class ServiceConductorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Text(
-        'Conductor: ${currentService.conductor!}',
-        style: const TextStyle(fontSize: 18),
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(right: 8),
+        child: Text(
+          'Conductor: ${currentService.conductor!}',
+          style: const TextStyle(fontSize: 18),
+        ),
       ),
     );
   }
@@ -45,11 +62,14 @@ class ServiceOrganistWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8),
-      child: Text(
-        'Organist: ${currentService.organist!}',
-        style: const TextStyle(fontSize: 18),
+    return Container(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          'Organist: ${currentService.organist!}',
+          style: const TextStyle(fontSize: 18),
+        ),
       ),
     );
   }
@@ -225,6 +245,54 @@ class ServiceTimeWidget extends StatelessWidget {
         'Service: ${Music.formatTime(currentService.time)}',
         style: const TextStyle(fontSize: 22),
       ),
+    );
+  }
+}
+
+class SocialWidget extends StatelessWidget {
+  const SocialWidget({super.key, required this.currentService});
+
+  final Service currentService;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      physics: const ScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: currentService.music.length,
+      itemBuilder: (context, index) { 
+        return Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                currentService.serviceType,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 8, bottom: 8),
+              child: Text(
+                currentService.music[index].title,
+                style: const TextStyle(fontStyle: FontStyle.italic, fontSize: 22),
+              ),
+            ),
+            if (currentService.music[index].rehearsalTime != '') ...[
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 8, bottom: 8),
+                child: Text(
+                  Music.formatTime(currentService.music[index].rehearsalTime),
+                  style: const TextStyle(fontSize: 22),
+                ),
+              ),
+            ]
+          ],
+        );
+      }
     );
   }
 }
