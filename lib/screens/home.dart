@@ -187,14 +187,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   label: 'Manage Users',
                 ),
-                NavigationDestination(
-                  selectedIcon: Icon(Icons.file_download),
-                  icon: Icon(
-                    Icons.file_download,
-                    color: appState.onPrimaryColor,
+                if(!kIsWeb) // FlutterDownloader is not available on web
+                  NavigationDestination(
+                    selectedIcon: Icon(Icons.file_download),
+                    icon: Icon(
+                      Icons.file_download,
+                      color: appState.onPrimaryColor,
+                    ),
+                    label: 'PDF',
                   ),
-                  label: 'PDF',
-                ),
               ],
             )
           : null,
