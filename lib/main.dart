@@ -33,15 +33,16 @@ void main() async {
   }
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  await FirebaseAppCheck.instance.activate(
-  providerAndroid: kDebugMode ? AndroidDebugProvider() : AndroidPlayIntegrityProvider(),
-  providerWeb: kDebugMode ? WebDebugProvider() : ReCaptchaV3Provider('6LdQ2cksAAAAAO7uBa3Y44YkD2TzWrqgNS2N71Yn')
-);
+  if (!kIsWeb) {
+    await FirebaseAppCheck.instance.activate(
+      providerAndroid: kDebugMode ? AndroidDebugProvider() : AndroidPlayIntegrityProvider(),   
+    );
 
-  await FlutterDownloader.initialize(
-    debug: kDebugMode, // set to false in production
-    ignoreSsl: true 
-  );
+    await FlutterDownloader.initialize(
+      debug: kDebugMode, // set to false in production
+      ignoreSsl: true 
+    );
+  }
 
   SharedPreferences.getInstance().then((prefs) {
     var themeName = prefs.getString('themeName') ?? 'base';
