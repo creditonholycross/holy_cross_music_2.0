@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:holy_cross_music/helper/pdf_generation.dart';
 import 'package:holy_cross_music/main.dart';
-import 'package:holy_cross_music/models/month.dart';
-import 'package:holy_cross_music/models/music.dart';
-import 'package:holy_cross_music/screens/widgets.dart';
+import 'package:holy_cross_music/app_state.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'dart:isolate';
 
@@ -97,6 +96,7 @@ class _PdfGeneratePageState extends State<PdfGeneratePage> {
 
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<ApplicationState>();
     return Scaffold(
       body: Column(
         children: [
@@ -105,12 +105,15 @@ class _PdfGeneratePageState extends State<PdfGeneratePage> {
             width: double.infinity,
             child: Center(
               child: pdfGenerating ? CircularProgressIndicator() : FilledButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: appState.serviceColour,
+                ),
                 onPressed: () {
                   generate();
                 },
                 child: Text(
                 'Generate PDF',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: appState.onPrimaryColor)
                 ),
               ),
             ),
@@ -120,12 +123,16 @@ class _PdfGeneratePageState extends State<PdfGeneratePage> {
             width: double.infinity,
             child: Center(
               child: fileDownloading ? CircularProgressIndicator() : FilledButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: appState.serviceColour,
+                ),
                 onPressed: () {
                   download();
                 },
                 child: Text(
-                'Download PDF',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)
+                  'Download PDF',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: appState.onPrimaryColor
+                  )
                 ),
               ),
             ),
