@@ -158,7 +158,7 @@ Future<void> printDoc(MonthlyMusic monthlyMusic) async {
                         pw.Padding(
                           padding: const pw.EdgeInsets.only(bottom: 8),
                           child: pw.Text(
-                            'Conductor: ${monthlyMusic.services[intList[j][index]].organist!}',
+                            'Conductor: ${monthlyMusic.services[intList[j][index]].conductor!}',
                             style: const pw.TextStyle(fontSize: 12),
                           ),
                         ),
