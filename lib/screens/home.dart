@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         backgroundColor: appState.serviceColour,
         title: Text(
-          ['Holy Cross Music', 'Truro', 'Manage Users', 'PDF Generation'][currentPageIndex],
+          ['Holy Cross Music', 'Manage Users', 'PDF Generation'][currentPageIndex],
           style: TextStyle(color: appState.onPrimaryColor),
         ),
         leading: currentPageIndex != 0
@@ -170,14 +170,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: appState.onPrimaryColor,
                   ),
                   label: 'Home',
-                ),
-                NavigationDestination(
-                  selectedIcon: Icon(Icons.add_reaction),
-                  icon: Icon(
-                    Icons.add_reaction,
-                    color: appState.onPrimaryColor,
-                  ),
-                  label: 'Truro',
                 ),
                 NavigationDestination(
                   selectedIcon: Icon(Icons.manage_accounts),
@@ -313,25 +305,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-              if (!['admin', 'superadmin'].contains(appState.userLevel))
-                Card(
-                  child: ListTile(
-                    title: const Text(
-                      'Truro',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                    onTap: () async {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const TruroPage(),
-                        ),
-                      );
-                    },
-                  ),
-                ),
               Card(
                 child: ListTile(
                   title: const Text(
@@ -350,7 +323,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        TruroPage(),
         UserManagementScreen(),
         PdfGeneratePage()
       ][currentPageIndex],
